@@ -564,7 +564,7 @@ function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
 async function saveResultImage(){
   if(selected.length!==3) return;
 
-  const W=1080, H=2200;
+  const W=1080, H=2320;
   const c=document.createElement("canvas");
   c.width=W; c.height=H;
   const ctx=c.getContext("2d");
@@ -578,8 +578,8 @@ async function saveResultImage(){
   glow.addColorStop(0,"rgba(190,35,63,.38)"); glow.addColorStop(1,"rgba(190,35,63,0)");
   ctx.fillStyle=glow; ctx.fillRect(0,0,W,620);
 
-  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,2144);
-  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,2116);
+  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,2264);
+  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,2236);
 
   ctx.textAlign="center";
   ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
@@ -612,7 +612,7 @@ async function saveResultImage(){
   selected.forEach((d,i)=>{
     const x=xs[i], left=x-155, top=250;
     ctx.fillStyle="#151015"; ctx.strokeStyle="#8f6a35"; ctx.lineWidth=3;
-    roundRect(left,top,310,1180,22,true,true);
+    roundRect(left,top,310,1240,22,true,true);
 
     ctx.fillStyle="#d7b96d"; ctx.font="700 20px sans-serif"; ctx.textAlign="center";
     ctx.fillText(labels[i],x,292);
@@ -636,19 +636,19 @@ async function saveResultImage(){
     drawWrapped(ex.shine,x,1087,265,29,5,"19px sans-serif","#eee2d4");
     ctx.fillStyle="#ff9fac"; ctx.font="700 19px sans-serif"; ctx.fillText("腐らせると",x,1242);
     drawWrapped(ex.shadow,x,1279,265,29,5,"19px sans-serif","#f3dedf");
-    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif"; ctx.fillText("😈 悪いうめこ",x,1425);
-    drawWrapped(d.bad,x,1462,265,30,4,"20px sans-serif","#f3dedf");
+    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif"; ctx.fillText("😈 悪いうめこ",x,1370);
+    drawWrapped(d.bad,x,1407,265,28,4,"20px sans-serif","#f3dedf");
   });
 
   const combo=buildCombo(selected);
   ctx.fillStyle="#1b1015"; ctx.strokeStyle="#a77d38"; ctx.lineWidth=3;
-  roundRect(245,1580,590,350,20,true,true);
+  roundRect(245,1540,590,430,20,true,true);
   ctx.fillStyle="#fff0bd"; ctx.font="900 31px sans-serif"; ctx.textAlign="center";
-  ctx.fillText(displayName()+"、3枚合わせたら何者？",540,1630);
+  ctx.fillText(displayName()+"、3枚合わせたら何者？",540,1595);
   ctx.fillStyle="#d8b85e"; ctx.font="800 23px sans-serif";
-  drawWrapped(combo.tag,540,1675,520,31,2,"800 23px sans-serif","#d8b85e");
-  drawWrapped(combo.body,540,1750,520,30,5,"20px sans-serif","#eee1d1");
-  drawWrapped("😈 "+combo.punch,540,1905,520,29,3,"700 19px sans-serif","#ffb7c0");
+  drawWrapped(combo.tag,540,1640,520,31,2,"800 23px sans-serif","#d8b85e");
+  drawWrapped(combo.body,540,1720,520,30,6,"20px sans-serif","#eee1d1");
+  drawWrapped("😈 "+combo.punch,540,1900,520,29,3,"700 19px sans-serif","#ffb7c0");
 
   // Mascots in saved image
   async function loadPic(src){
@@ -656,19 +656,19 @@ async function saveResultImage(){
   }
   try{
     const [u,bad]=await Promise.all([loadPic(IMG.normal),loadPic(IMG.bad)]);
-    ctx.drawImage(u,55,1650,175,175);
-    ctx.drawImage(bad,850,1650,175,175);
+    ctx.drawImage(u,55,1625,175,175);
+    ctx.drawImage(bad,850,1625,175,175);
   }catch(e){}
 
   ctx.fillStyle="#fff0bf"; ctx.font="900 34px sans-serif"; ctx.textAlign="center";
-  ctx.fillText(displayName()+"、ええ手札持ってるやん。",540,2020);
+  ctx.fillText(displayName()+"、ええ手札持ってるやん。",540,2070);
   ctx.fillStyle="#e8bd61"; ctx.font="900 44px sans-serif";
-  ctx.fillText("ほな、いつ切るん？",540,2075);
+  ctx.fillText("ほな、いつ切るん？",540,2130);
   ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
   ctx.fillStyle="#b6a895"; ctx.font="18px sans-serif";
-  ctx.fillText("所詮トランプ。されど、妙に刺さる。",540,2140);
+  ctx.fillText("所詮トランプ。されど、妙に刺さる。",540,2210);
   ctx.fillStyle="#776f68"; ctx.font="15px sans-serif";
-  ctx.fillText("※人生の重要事項は、自分で決めてください。",540,2170);
+  ctx.fillText("※人生の重要事項は、自分で決めてください。",540,2245);
 
   // iPhone: show the actual PNG and save by long press.
   const png=c.toDataURL("image/png");
