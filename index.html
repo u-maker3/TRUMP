@@ -190,6 +190,12 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 .combo-tag{text-align:center;color:#d8b85e;font-weight:900;margin-bottom:15px}
 .combo-reading p{line-height:1.8;color:#eee1d1}
 .combo-punch{margin-top:14px;padding:13px;border-radius:12px;background:#330b13;color:#ffd9dd;font-weight:800;line-height:1.7}
+
+.namebox{max-width:430px;margin:18px auto 12px}
+.namebox input{width:100%;padding:14px 16px;border-radius:999px;border:1px solid #9b7437;
+ background:#120c10;color:#fff0c0;text-align:center;font-size:1rem;outline:none;box-shadow:inset 0 0 12px #0008}
+.namebox input:focus{border-color:#f0ca73;box-shadow:0 0 18px #d39c3b44}
+.namehint{font-size:.72rem;color:#8f8377;margin-top:6px}
 </style>
 </head>
 <body><div class="sparkles" id="sparkles"></div>
@@ -199,9 +205,16 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 <section id="intro" class="hero">
   <div class="kicker">UMEKO ORIGINAL CARD DIAGNOSIS</div>
   <h1>人生の手札診断</h1>
-  <p class="lead">配られたカードに文句言う前に、手札見よか。<br>直感で3枚。あんたが持ってる武器、腐らせてる武器、最後の切り札を暴きます。</p>
+  <p class="lead"><b style="color:#ffe6a4;font-size:1.15em">たかがトランプ。<br>されど、妙に刺さる。</b><br><br>
+  54枚から直感で3枚。<br>
+  あんたが持ってる札、腐らせてる札、ここぞの切り札を見てみよか。<br><br>
+  <b>信じるも信じんも自由。<br>使えそうな札だけ持って帰って。</b></p>
   <img class="mascot" src="umeko.PNG" alt="うめこ">
   <div class="quote">配られたカードは変えられへん。<br>でも、切り方はあんた次第。</div>
+  <div class="namebox">
+    <input id="userName" type="text" maxlength="20" placeholder="名前を入れてな（例：うめこ）" autocomplete="off">
+    <div class="namehint">入力した名前は保存しません。</div>
+  </div>
   <button class="btn" id="start">手札を配ってもらう</button>
 </section>
 
@@ -228,7 +241,7 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 
 <section id="results" class="results hidden">
   <div class="kicker">YOUR HAND</div>
-  <h2>あんたの人生の手札</h2>
+  <h2 id="resultTitle">人生の手札</h2>
   <div class="hand" id="hand"></div>
   <div class="combo-reading" id="comboReading"></div><div class="summary" id="summary"></div>
   <div id="saveCard" class="save-card"></div><div class="action-row">
@@ -317,6 +330,8 @@ const jokerData=[
  {id:"BJ",name:"BLACK JOKER",title:"大逆転者",power:"分類：土壇場専門。",reading:"順調な時より「もうアカン」から異様に強い札。想定外・失敗・予定変更すら材料にして、最後にひっくり返す力を持つ。",use:"計画が崩れた時。選択肢がなくなった時。「もうこれしかない」になった時。",bad:"最初から本気出せ。毎回崖っぷち待つな。",img:IMG.blackJoker}
 ];
 
+let playerName="あんた";
+function displayName(){return playerName || "あんた";}
 let cards=[];
 for(const suit of Object.keys(data)){
   data[suit].forEach(x=>cards.push({
@@ -488,12 +503,12 @@ function showResults(){
       <div class="cardcode${red}">${code}</div><h4>${d.title}</h4>
       <p>${d.reading}</p><p class="devil">😈 ${d.bad}</p></div>`}).join("")}</div>`; 
   const combo=buildCombo(selected);
-  $("#comboReading").innerHTML=`<h3>3枚合わせたら、あんた何者？</h3>
+  $("#comboReading").innerHTML=`<h3>${displayName()}、3枚合わせたら何者？</h3>
     <div class="combo-tag">${combo.tag}</div>
     <p>${combo.body}</p>
     <div class="combo-punch">😈 ${combo.punch}</div>`;
   const jokers=selected.filter(c=>c.id==="RJ"||c.id==="BJ");
-  let text=`<div class="final">あんた、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
+  let text=`<div class="final">${displayName()}、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
   if(jokers.length===1){
     const pos=selected.indexOf(jokers[0]);
     const msg=[
@@ -505,7 +520,11 @@ function showResults(){
   }else if(jokers.length===2){
     text=`<div class="error">判 定 不 能</div><p class="final">JOKER 2枚引き。<br><b>うめこにも手ぇ負えません。</b></p>`;
   }
-  $("#summary").innerHTML=text+`<div class="duo"><img src="${IMG.normal}" alt="うめこ"><img src="${IMG.bad}" alt="悪いうめこ"></div>`;
+  $("#summary").innerHTML=text+`<div class="duo"><img src="${IMG.normal}" alt="うめこ"><img src="${IMG.bad}" alt="悪いうめこ"></div>
+    <div style="margin:14px auto 0;padding-top:14px;border-top:1px solid #4f3c2b;color:#bdb0a0;line-height:1.7;font-size:.82rem">
+      ※所詮トランプです。<br>人生の重要事項は、自分で決めてください。
+      <div style="margin-top:8px;color:#ffabb5;font-weight:800">😈 悪いうめこ「トランプに人生決めてもろたら困るわ。」</div>
+    </div>`;
   window.scrollTo({top:$("#results").offsetTop-10,behavior:"smooth"});
 }
 
@@ -565,8 +584,10 @@ async function saveResultImage(){
   ctx.textAlign="center";
   ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
   ctx.fillStyle="#fff0c0"; ctx.font="900 61px serif"; ctx.fillText("人生の手札診断",540,154);
+  ctx.fillStyle="#e8bd61"; ctx.font="700 24px sans-serif";
+  if(displayName()!=="あんた") ctx.fillText(displayName()+" の手札",540,188);
   ctx.fillStyle="#c9bba7"; ctx.font="25px sans-serif";
-  ctx.fillText("配られたカードは変えられへん。でも、切り方はあんた次第。",540,204);
+  ctx.fillText("配られたカードは変えられへん。でも、切り方は自分次第。",540,220);
 
   const labels=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
   const xs=[190,540,890];
@@ -623,7 +644,7 @@ async function saveResultImage(){
   ctx.fillStyle="#1b1015"; ctx.strokeStyle="#a77d38"; ctx.lineWidth=3;
   roundRect(245,1580,590,350,20,true,true);
   ctx.fillStyle="#fff0bd"; ctx.font="900 31px sans-serif"; ctx.textAlign="center";
-  ctx.fillText("3枚合わせたら、あんた何者？",540,1630);
+  ctx.fillText(displayName()+"、3枚合わせたら何者？",540,1630);
   ctx.fillStyle="#d8b85e"; ctx.font="800 23px sans-serif";
   drawWrapped(combo.tag,540,1675,520,31,2,"800 23px sans-serif","#d8b85e");
   drawWrapped(combo.body,540,1750,520,30,5,"20px sans-serif","#eee1d1");
@@ -640,11 +661,14 @@ async function saveResultImage(){
   }catch(e){}
 
   ctx.fillStyle="#fff0bf"; ctx.font="900 34px sans-serif"; ctx.textAlign="center";
-  ctx.fillText("あんた、ええ手札持ってるやん。",540,2020);
+  ctx.fillText(displayName()+"、ええ手札持ってるやん。",540,2020);
   ctx.fillStyle="#e8bd61"; ctx.font="900 44px sans-serif";
   ctx.fillText("ほな、いつ切るん？",540,2075);
   ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
-  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,2150);
+  ctx.fillStyle="#b6a895"; ctx.font="18px sans-serif";
+  ctx.fillText("所詮トランプ。されど、妙に刺さる。",540,2140);
+  ctx.fillStyle="#776f68"; ctx.font="15px sans-serif";
+  ctx.fillText("※人生の重要事項は、自分で決めてください。",540,2170);
 
   // iPhone: show the actual PNG and save by long press.
   const png=c.toDataURL("image/png");
@@ -660,7 +684,12 @@ async function saveResultImage(){
   overlay.querySelector(".closePreview").onclick=()=>overlay.remove();
 }
 
-$("#start").onclick=()=>{$("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"})};
+$("#start").onclick=()=>{
+  const raw=$("#userName").value.trim();
+  playerName=raw || "あんた";
+  $("#resultTitle").textContent=playerName==="あんた" ? "あんたの人生の手札" : `${playerName}の人生の手札`;
+  $("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"});
+};
 $("#saveResult").onclick=saveResultImage;
 $("#again").onclick=()=>{deal();window.scrollTo({top:0,behavior:"smooth"})};
 </script>
