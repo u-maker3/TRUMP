@@ -90,9 +90,53 @@ h1{font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2.2rem,10vw,4.8rem);mar
   color:#ff465f;letter-spacing:.1em;font-weight:900
 }
 footer{margin-top:36px;color:#776f68;font-size:.72rem}
+
+/* --- UMEKO upgrade: shuffle / flip / sparkle / save --- */
+.sparkles{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.spark{position:absolute;width:5px;height:5px;background:#ffe9a4;transform:rotate(45deg);
+  box-shadow:0 0 8px #fff1a8,0 0 18px #dca52e;animation:twinkle var(--d) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.05;transform:scale(.35) rotate(45deg)}50%{opacity:1;transform:scale(1.7) rotate(45deg)}}
+.shuffler{max-width:700px;margin:12px auto 22px;padding:18px;border:1px solid #6f5530;border-radius:18px;background:#100b0e}
+.shuffle-zone{height:210px;position:relative;display:grid;place-items:center;perspective:900px}
+.shuffle-card{position:absolute;width:112px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;box-shadow:0 9px 25px #000b;transition:.18s}
+.shuffle-card img{width:100%;height:100%;object-fit:cover}
+.shuffler.go .c1{animation:mix1 1.15s ease-in-out}
+.shuffler.go .c2{animation:mix2 1.15s ease-in-out}
+.shuffler.go .c3{animation:mix3 1.15s ease-in-out}
+.shuffler.go .c4{animation:mix4 1.15s ease-in-out}
+.shuffler.go .c5{animation:mix5 1.15s ease-in-out}
+@keyframes mix1{20%{transform:translate(-115px,-20px) rotate(-18deg)}55%{transform:translate(85px,20px) rotate(12deg)}100%{transform:none}}
+@keyframes mix2{20%{transform:translate(105px,-15px) rotate(16deg)}55%{transform:translate(-80px,28px) rotate(-11deg)}100%{transform:none}}
+@keyframes mix3{25%{transform:translate(-65px,38px) rotate(-9deg)}60%{transform:translate(120px,-22px) rotate(20deg)}100%{transform:none}}
+@keyframes mix4{25%{transform:translate(75px,42px) rotate(10deg)}60%{transform:translate(-120px,-25px) rotate(-20deg)}100%{transform:none}}
+@keyframes mix5{35%{transform:translateY(-45px) rotate(180deg)}75%{transform:translateY(25px) rotate(360deg)}100%{transform:none}}
+.pick{position:relative}
+.pick::before{content:"";position:absolute;inset:-80% -120%;background:linear-gradient(115deg,transparent 42%,#fff8cfdd 49%,transparent 56%);transform:translateX(-60%);transition:.2s;z-index:2}
+.pick:hover::before{animation:cardshine .75s ease}
+@keyframes cardshine{to{transform:translateX(65%)}}
+.reveal-overlay{position:fixed;inset:0;z-index:80;background:#050306eF;display:grid;place-items:center;padding:20px}
+.reveal-card{width:min(330px,78vw);aspect-ratio:2/3;perspective:1200px;filter:drop-shadow(0 0 30px #b11234)}
+.reveal-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:flipwow 1.15s cubic-bezier(.2,.8,.2,1) forwards}
+.reveal-side{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;overflow:hidden;box-shadow:0 0 55px #e7bd5b99}
+.reveal-back img,.reveal-joker img{width:100%;height:100%;object-fit:cover}
+.reveal-front{transform:rotateY(180deg);background:radial-gradient(circle,#fffaf0,#e9dcc4);display:flex;align-items:center;justify-content:center;border:8px double #c99a3c}
+.reveal-front.red{color:#a40d20}.reveal-front.black{color:#111}
+.reveal-front .big{font-family:Georgia,serif;font-size:clamp(5rem,25vw,8rem);font-weight:900;line-height:.8}
+.reveal-front .bigSuit{font-size:clamp(4rem,20vw,7rem);line-height:1}
+@keyframes flipwow{0%{transform:rotateY(0) scale(.75)}45%{transform:rotateY(540deg) scale(1.08)}100%{transform:rotateY(900deg) scale(1)}}
+.flash{position:fixed;inset:0;z-index:79;pointer-events:none;background:radial-gradient(circle,#fff9d8 0,#d9a63088 15%,transparent 50%);animation:flash .9s ease forwards}
+@keyframes flash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
+.result{animation:rise .6s ease both}
+.result:nth-child(2){animation-delay:.12s}.result:nth-child(3){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.result::after{content:"";position:absolute;top:-70%;left:-120%;width:80%;height:240%;background:linear-gradient(100deg,transparent,#fff2a72b,transparent);transform:rotate(15deg);animation:sweep 4s ease-in-out infinite}
+@keyframes sweep{0%,55%{left:-120%}85%,100%{left:160%}}
+.action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.save-note{font-size:.75rem;color:#aa9d8b;margin-top:8px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 </style>
 </head>
-<body>
+<body><div class="sparkles" id="sparkles"></div>
 <main class="wrap">
 <section id="intro" class="hero">
   <div class="kicker">UMEKO ORIGINAL CARD DIAGNOSIS</div>
@@ -104,9 +148,22 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 </section>
 
 <section id="game" class="stage hidden">
-  <div class="instruction">考えすぎ禁止。直感で3枚選んでな。</div>
-  <div class="counter" id="counter">0 / 3 枚</div>
-  <div class="deck" id="deck"></div>
+  <div class="shuffler" id="shuffler">
+    <div class="instruction">まずは54枚、派手に混ぜます。</div>
+    <div class="shuffle-zone">
+      <div class="shuffle-card c1"><img src="card_back.PNG"></div>
+      <div class="shuffle-card c2"><img src="card_back.PNG"></div>
+      <div class="shuffle-card c3"><img src="card_back.PNG"></div>
+      <div class="shuffle-card c4"><img src="card_back.PNG"></div>
+      <div class="shuffle-card c5"><img src="card_back.PNG"></div>
+    </div>
+    <button class="btn" id="shuffleBtn">🃏 シャッフルする</button>
+  </div>
+  <div id="pickArea" class="hidden">
+    <div class="instruction">考えすぎ禁止。直感で3枚選んでな。</div>
+    <div class="counter" id="counter">0 / 3 枚</div>
+    <div class="deck" id="deck"></div>
+  </div>
 </section>
 
 <section id="results" class="results hidden">
@@ -114,7 +171,11 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
   <h2>あんたの人生の手札</h2>
   <div class="hand" id="hand"></div>
   <div class="summary" id="summary"></div>
-  <div style="margin-top:18px"><button class="btn secondary" id="again">もう一回、配り直す</button></div>
+  <div class="action-row">
+    <button class="btn" id="saveResult">結果を画像保存</button>
+    <button class="btn secondary" id="again">もう一回、配り直す</button>
+  </div>
+  <div class="save-note">画像は 1080×1350px のPNGで保存されます。</div>
 </section>
 <footer>※遊びとして楽しむオリジナル診断です。結果は人生の決定を代わりにするものではありません。</footer>
 </main>
@@ -215,6 +276,7 @@ function shuffle(a){
 function deal(){
   selected=[]; shuffled=shuffle(cards);
   $("#results").classList.add("hidden"); $("#game").classList.remove("hidden");
+  $("#pickArea").classList.add("hidden"); $("#shuffler").classList.remove("hidden","go");
   $("#counter").textContent="0 / 3 枚";
   const deck=$("#deck"); deck.innerHTML="";
   shuffled.forEach((card,i)=>{
@@ -225,7 +287,7 @@ function deal(){
       if(selected.length>=3 || b.classList.contains("chosen")) return;
       b.classList.add("chosen"); selected.push(card);
       $("#counter").textContent=`${selected.length} / 3 枚`;
-      if(selected.length===3) setTimeout(showResults,450);
+      revealCard(card, selected.length, ()=>{ if(selected.length===3) setTimeout(showResults,220); });
     };
     deck.appendChild(b);
   });
@@ -235,6 +297,37 @@ function face(c){
   const cls=suitInfo[c.suit].color==="red"?" red":"";
   return `<div class="face${cls}"><div class="rank">${c.rank}</div><div class="suit">${c.suit}</div></div>`;
 }
+
+function burstSparkles(){
+  const flash=document.createElement("div"); flash.className="flash"; document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),950);
+}
+function revealCard(c,n,done){
+  burstSparkles();
+  const o=document.createElement("div"); o.className="reveal-overlay";
+  let front;
+  if(c.id==="RJ"||c.id==="BJ"){
+    front=`<div class="reveal-side reveal-front reveal-joker"><img src="${c.img}" alt="${c.name}"></div>`;
+  }else{
+    const col=suitInfo[c.suit].color;
+    front=`<div class="reveal-side reveal-front ${col}"><div><div class="big">${c.rank}</div><div class="bigSuit">${c.suit}</div></div></div>`;
+  }
+  o.innerHTML=`<div><div class="slot" style="margin-bottom:12px">${n}枚目</div><div class="reveal-card"><div class="reveal-inner"><div class="reveal-side reveal-back"><img src="${IMG.back}"></div>${front}</div></div><div style="margin-top:18px;color:#ffe6a4;font-weight:900">めくったで。</div></div>`;
+  document.body.appendChild(o);
+  setTimeout(()=>{o.style.transition=".3s";o.style.opacity="0";setTimeout(()=>{o.remove();done&&done()},300)},1550);
+}
+function makeSparkles(){
+  const box=$("#sparkles");
+  for(let i=0;i<30;i++){
+    const x=document.createElement("i"); x.className="spark";
+    x.style.left=Math.random()*100+"%"; x.style.top=Math.random()*100+"%";
+    x.style.setProperty("--d",(1.4+Math.random()*3)+"s");
+    x.style.animationDelay=(-Math.random()*3)+"s";
+    box.appendChild(x);
+  }
+}
+makeSparkles();
+
 function showResults(){
   $("#game").classList.add("hidden"); $("#results").classList.remove("hidden");
   const slots=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
@@ -264,7 +357,65 @@ function showResults(){
   $("#summary").innerHTML=text+`<div class="duo"><img src="${IMG.normal}" alt="うめこ"><img src="${IMG.bad}" alt="悪いうめこ"></div>`;
   window.scrollTo({top:$("#results").offsetTop-10,behavior:"smooth"});
 }
+
+$("#shuffleBtn").onclick=()=>{
+  const z=$("#shuffler"); z.classList.remove("go"); void z.offsetWidth; z.classList.add("go");
+  shuffled=shuffle(cards);
+  burstSparkles();
+  setTimeout(()=>{
+    z.classList.add("hidden"); $("#pickArea").classList.remove("hidden");
+    $("#pickArea").scrollIntoView({behavior:"smooth",block:"start"});
+  },1200);
+};
+
+function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
+  let line="", lines=[];
+  for(const ch of text){
+    const test=line+ch;
+    if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=ch}else line=test;
+  }
+  if(line) lines.push(line);
+  lines=lines.slice(0,maxLines);
+  lines.forEach((ln,i)=>ctx.fillText(ln,x,y+i*lineHeight));
+  return y+lines.length*lineHeight;
+}
+async function saveResultImage(){
+  if(selected.length!==3) return;
+  const c=document.createElement("canvas"); c.width=1080;c.height=1350;
+  const ctx=c.getContext("2d");
+  const g=ctx.createLinearGradient(0,0,0,1350);g.addColorStop(0,"#250a12");g.addColorStop(.42,"#0c090c");g.addColorStop(1,"#050405");
+  ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle="#d8aa4c";ctx.lineWidth=5;ctx.strokeRect(28,28,1024,1294);
+  ctx.textAlign="center";ctx.fillStyle="#e8bd61";ctx.font="700 28px serif";ctx.fillText("YOUR HAND",540,90);
+  ctx.fillStyle="#fff0c0";ctx.font="900 58px serif";ctx.fillText("人生の手札診断",540,155);
+  ctx.fillStyle="#c9bba7";ctx.font="26px sans-serif";ctx.fillText("配られたカードは変えられへん。でも、切り方はあんた次第。",540,205);
+  const labels=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
+  const xs=[195,540,885];
+  selected.forEach((d,i)=>{
+    const x=xs[i];
+    ctx.fillStyle="#181116";ctx.strokeStyle="#8f6a35";ctx.lineWidth=3;
+    ctx.beginPath();ctx.roundRect(x-150,250,300,760,22);ctx.fill();ctx.stroke();
+    ctx.fillStyle="#d7b96d";ctx.font="700 20px sans-serif";ctx.fillText(labels[i],x,295);
+    ctx.fillStyle=(d.suit==="♥"||d.suit==="♦")?"#c92a3d":"#f0e5d0";
+    ctx.font="900 72px Georgia";
+    ctx.fillText((d.rank||"JOKER")+" "+(d.suit||""),x,400);
+    ctx.fillStyle="#d5bc7e";ctx.font="700 20px sans-serif";
+    const pw=(d.id==="RJ"||d.id==="BJ")?d.power:`${d.power} × ${d.action}`;
+    ctx.fillText(pw,x,445);
+    ctx.fillStyle="#fff0bf";ctx.font="900 29px sans-serif";wrapText(ctx,d.title,x,495,255,38,2);
+    ctx.fillStyle="#eee2d4";ctx.font="22px sans-serif";
+    let yy=wrapText(ctx,d.reading,x,585,250,34,6);
+    ctx.fillStyle="#ffb0b9";ctx.font="700 20px sans-serif";ctx.fillText("悪いうめこ",x,835);
+    ctx.fillStyle="#f3dedf";ctx.font="21px sans-serif";wrapText(ctx,d.bad,x,875,250,32,4);
+  });
+  ctx.fillStyle="#fff0bf";ctx.font="900 34px sans-serif";ctx.fillText("あんた、ええ手札持ってるやん。",540,1090);
+  ctx.fillStyle="#e8bd61";ctx.font="900 44px sans-serif";ctx.fillText("ほな、いつ切るん？",540,1150);
+  ctx.fillStyle="#8e8275";ctx.font="18px sans-serif";ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1285);
+  const a=document.createElement("a");a.download="jinsei_no_tefuda.PNG";a.href=c.toDataURL("image/png");a.click();
+}
+
 $("#start").onclick=()=>{$("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"})};
+$("#saveResult").onclick=saveResultImage;
 $("#again").onclick=()=>{deal();window.scrollTo({top:0,behavior:"smooth"})};
 </script>
 </body>
