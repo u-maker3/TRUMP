@@ -134,9 +134,37 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 .action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .save-note{font-size:.75rem;color:#aa9d8b;margin-top:8px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* v3 */
+.floating-mascot{position:fixed;z-index:45;bottom:8px;width:clamp(76px,18vw,145px);pointer-events:none;
+ filter:drop-shadow(0 8px 14px #0009)}
+.float-normal{left:2px;animation:bobA 2.4s ease-in-out infinite}
+.float-bad{right:2px;animation:bobB 2s ease-in-out infinite}
+@keyframes bobA{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-15px) rotate(4deg)}}
+@keyframes bobB{0%,100%{transform:translateY(-5px) rotate(4deg)}50%{transform:translateY(-22px) rotate(-5deg)}}
+.shuffler.loop .c1{animation:mix1 .75s ease-in-out infinite}
+.shuffler.loop .c2{animation:mix2 .68s ease-in-out infinite}
+.shuffler.loop .c3{animation:mix3 .82s ease-in-out infinite}
+.shuffler.loop .c4{animation:mix4 .72s ease-in-out infinite}
+.shuffler.loop .c5{animation:mix5 .9s ease-in-out infinite}
+.stopbtn{background:linear-gradient(180deg,#d6aa43,#80601d);color:#160e08}
+.save-card{margin:16px auto 0;max-width:720px;background:linear-gradient(180deg,#21141a,#0b080a);
+ border:2px solid #a77d38;border-radius:22px;padding:22px 14px;box-shadow:0 0 30px #b7862c22}
+.save-title{font-family:Georgia,"Yu Mincho",serif;color:#fff0bd;font-size:1.9rem;font-weight:900}
+.save-sub{color:#d4bc7d;margin:5px 0 16px;font-weight:800}
+.save-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.save-mini{border:1px solid #72562f;border-radius:14px;padding:12px 7px;background:#130e11;min-width:0}
+.save-mini .cardcode{font:900 2.1rem Georgia,serif;color:#fff0c0}
+.save-mini .cardcode.red{color:#ff6575}
+.save-mini h4{margin:8px 0;color:#fff0bd;font-size:1rem}
+.save-mini p{margin:6px 0;line-height:1.45;font-size:.8rem;color:#e8ddd0}
+.save-mini .devil{color:#ffabb5}
+@media(max-width:520px){.save-grid{grid-template-columns:1fr}.save-mini p{font-size:.9rem}}
 </style>
 </head>
 <body><div class="sparkles" id="sparkles"></div>
+<img class="floating-mascot float-normal" src="umeko.PNG" alt="">
+<img class="floating-mascot float-bad" src="bad_umeko.PNG" alt="">
 <main class="wrap">
 <section id="intro" class="hero">
   <div class="kicker">UMEKO ORIGINAL CARD DIAGNOSIS</div>
@@ -157,7 +185,9 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
       <div class="shuffle-card c4"><img src="card_back.PNG"></div>
       <div class="shuffle-card c5"><img src="card_back.PNG"></div>
     </div>
-    <button class="btn" id="shuffleBtn">🃏 シャッフルする</button>
+    <button class="btn" id="shuffleBtn">🃏 シャッフル開始</button>
+    <button class="btn stopbtn hidden" id="stopShuffle">ここや！ストップ</button>
+    <div id="shuffleMsg" style="margin-top:10px;color:#d7bd7c;font-weight:800">好きなだけ混ぜてな。</div>
   </div>
   <div id="pickArea" class="hidden">
     <div class="instruction">考えすぎ禁止。直感で3枚選んでな。</div>
@@ -171,7 +201,7 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
   <h2>あんたの人生の手札</h2>
   <div class="hand" id="hand"></div>
   <div class="summary" id="summary"></div>
-  <div class="action-row">
+  <div id="saveCard" class="save-card"></div><div class="action-row">
     <button class="btn" id="saveResult">結果を画像保存</button>
     <button class="btn secondary" id="again">もう一回、配り直す</button>
   </div>
@@ -276,7 +306,9 @@ function shuffle(a){
 function deal(){
   selected=[]; shuffled=shuffle(cards);
   $("#results").classList.add("hidden"); $("#game").classList.remove("hidden");
-  $("#pickArea").classList.add("hidden"); $("#shuffler").classList.remove("hidden","go");
+  $("#pickArea").classList.add("hidden"); $("#shuffler").classList.remove("hidden","go","loop");
+  $("#shuffleBtn").classList.remove("hidden"); $("#stopShuffle").classList.add("hidden");
+  $("#shuffleMsg").textContent="好きなだけ混ぜてな。"; if(shuffleTimer){clearInterval(shuffleTimer);shuffleTimer=null;}
   $("#counter").textContent="0 / 3 枚";
   const deck=$("#deck"); deck.innerHTML="";
   shuffled.forEach((card,i)=>{
@@ -341,6 +373,14 @@ function showResults(){
       <div class="use"><b>この札の使いどころ</b><br>${c.use}</div>
       <div class="bad"><b>😈 悪いうめこの余計な一言</b><br>${c.bad}</div>
     </article>`).join("");
+  $("#saveCard").innerHTML=`<div class="save-title">人生の手札診断</div>
+    <div class="save-sub">YOUR HAND｜ほな、いつ切るん？</div>
+    <div class="save-grid">${selected.map((d,i)=>{
+      const code=(d.id==="RJ"||d.id==="BJ")?d.name:`${d.rank}${d.suit}`;
+      const red=(d.suit==="♥"||d.suit==="♦"||d.id==="RJ")?" red":"";
+      return `<div class="save-mini"><div class="slot">${i+1}｜${slots[i]}</div>
+      <div class="cardcode${red}">${code}</div><h4>${d.title}</h4>
+      <p>${d.reading}</p><p class="devil">😈 ${d.bad}</p></div>`}).join("")}</div>`; 
   const jokers=selected.filter(c=>c.id==="RJ"||c.id==="BJ");
   let text=`<div class="final">あんた、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
   if(jokers.length===1){
@@ -358,14 +398,26 @@ function showResults(){
   window.scrollTo({top:$("#results").offsetTop-10,behavior:"smooth"});
 }
 
+let shuffleTimer=null;
 $("#shuffleBtn").onclick=()=>{
-  const z=$("#shuffler"); z.classList.remove("go"); void z.offsetWidth; z.classList.add("go");
+  const z=$("#shuffler");
+  z.classList.add("loop");
+  $("#shuffleBtn").classList.add("hidden");
+  $("#stopShuffle").classList.remove("hidden");
+  $("#shuffleMsg").textContent="まだまだ混ぜる？ 好きなとこで止めてな。";
   shuffled=shuffle(cards);
+  shuffleTimer=setInterval(()=>{shuffled=shuffle(cards)},420);
+};
+$("#stopShuffle").onclick=()=>{
+  clearInterval(shuffleTimer); shuffleTimer=null;
+  const z=$("#shuffler"); z.classList.remove("loop");
+  $("#stopShuffle").classList.add("hidden");
+  $("#shuffleMsg").textContent="そこやな。手札、決まりました。";
   burstSparkles();
   setTimeout(()=>{
     z.classList.add("hidden"); $("#pickArea").classList.remove("hidden");
     $("#pickArea").scrollIntoView({behavior:"smooth",block:"start"});
-  },1200);
+  },650);
 };
 
 function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
@@ -380,38 +432,30 @@ function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
   return y+lines.length*lineHeight;
 }
 async function saveResultImage(){
-  if(selected.length!==3) return;
-  const c=document.createElement("canvas"); c.width=1080;c.height=1350;
-  const ctx=c.getContext("2d");
-  const g=ctx.createLinearGradient(0,0,0,1350);g.addColorStop(0,"#250a12");g.addColorStop(.42,"#0c090c");g.addColorStop(1,"#050405");
-  ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
-  ctx.strokeStyle="#d8aa4c";ctx.lineWidth=5;ctx.strokeRect(28,28,1024,1294);
-  ctx.textAlign="center";ctx.fillStyle="#e8bd61";ctx.font="700 28px serif";ctx.fillText("YOUR HAND",540,90);
-  ctx.fillStyle="#fff0c0";ctx.font="900 58px serif";ctx.fillText("人生の手札診断",540,155);
-  ctx.fillStyle="#c9bba7";ctx.font="26px sans-serif";ctx.fillText("配られたカードは変えられへん。でも、切り方はあんた次第。",540,205);
-  const labels=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
-  const xs=[195,540,885];
-  selected.forEach((d,i)=>{
-    const x=xs[i];
-    ctx.fillStyle="#181116";ctx.strokeStyle="#8f6a35";ctx.lineWidth=3;
-    ctx.beginPath();ctx.roundRect(x-150,250,300,760,22);ctx.fill();ctx.stroke();
-    ctx.fillStyle="#d7b96d";ctx.font="700 20px sans-serif";ctx.fillText(labels[i],x,295);
-    ctx.fillStyle=(d.suit==="♥"||d.suit==="♦")?"#c92a3d":"#f0e5d0";
-    ctx.font="900 72px Georgia";
-    ctx.fillText((d.rank||"JOKER")+" "+(d.suit||""),x,400);
-    ctx.fillStyle="#d5bc7e";ctx.font="700 20px sans-serif";
-    const pw=(d.id==="RJ"||d.id==="BJ")?d.power:`${d.power} × ${d.action}`;
-    ctx.fillText(pw,x,445);
-    ctx.fillStyle="#fff0bf";ctx.font="900 29px sans-serif";wrapText(ctx,d.title,x,495,255,38,2);
-    ctx.fillStyle="#eee2d4";ctx.font="22px sans-serif";
-    let yy=wrapText(ctx,d.reading,x,585,250,34,6);
-    ctx.fillStyle="#ffb0b9";ctx.font="700 20px sans-serif";ctx.fillText("悪いうめこ",x,835);
-    ctx.fillStyle="#f3dedf";ctx.font="21px sans-serif";wrapText(ctx,d.bad,x,875,250,32,4);
-  });
-  ctx.fillStyle="#fff0bf";ctx.font="900 34px sans-serif";ctx.fillText("あんた、ええ手札持ってるやん。",540,1090);
-  ctx.fillStyle="#e8bd61";ctx.font="900 44px sans-serif";ctx.fillText("ほな、いつ切るん？",540,1150);
-  ctx.fillStyle="#8e8275";ctx.font="18px sans-serif";ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1285);
-  const a=document.createElement("a");a.download="jinsei_no_tefuda.PNG";a.href=c.toDataURL("image/png");a.click();
+  const node=$("#saveCard");
+  const w=Math.ceil(node.getBoundingClientRect().width);
+  const h=Math.ceil(node.getBoundingClientRect().height);
+  const clone=node.cloneNode(true);
+  clone.style.width=w+"px"; clone.style.margin="0"; clone.style.background="#100b0e";
+  const css=[...document.styleSheets].map(ss=>{try{return [...ss.cssRules].map(r=>r.cssText).join("")}catch(e){return""}}).join("");
+  const markup=new XMLSerializer().serializeToString(clone);
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+  <foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>${css}</style>${markup}</div></foreignObject></svg>`;
+  const blob=new Blob([svg],{type:"image/svg+xml;charset=utf-8"});
+  const url=URL.createObjectURL(blob), img=new Image();
+  img.onload=()=>{
+    const scale=Math.min(2,1080/w);
+    const c=document.createElement("canvas");c.width=Math.round(w*scale);c.height=Math.round(h*scale);
+    const ctx=c.getContext("2d");ctx.scale(scale,scale);ctx.drawImage(img,0,0);URL.revokeObjectURL(url);
+    c.toBlob(b=>{
+      if(!b){alert("画像化できへんかった🤣 スクショ保存してな。");return}
+      const u=URL.createObjectURL(b); const a=document.createElement("a");
+      a.href=u;a.download="jinsei_no_tefuda.PNG";document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(u),3000);
+    },"image/png");
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);alert("この端末では直接保存できへんかった🤣 結果カードをスクショしてな。")};
+  img.src=url;
 }
 
 $("#start").onclick=()=>{$("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"})};
