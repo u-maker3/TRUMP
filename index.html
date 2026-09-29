@@ -136,7 +136,7 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
 /* v3 */
-.floating-mascot{position:fixed;z-index:45;bottom:8px;width:clamp(76px,18vw,145px);pointer-events:none;
+.floating-mascot{position:fixed;z-index:45;top:calc(72px + env(safe-area-inset-top));width:clamp(70px,17vw,135px);pointer-events:none;
  filter:drop-shadow(0 8px 14px #0009)}
 .float-normal{left:2px;animation:bobA 2.4s ease-in-out infinite}
 .float-bad{right:2px;animation:bobB 2s ease-in-out infinite}
@@ -182,6 +182,14 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 .deepbox b{color:#e5c678}
 .deepbox.warn{background:#211015;border-color:#6b3039}
 .deepbox.warn b{color:#ff9fac}
+
+.combo-reading{margin:20px auto 0;max-width:760px;padding:22px 16px;border-radius:20px;
+ background:radial-gradient(circle at 50% 0,#38121c,#100b0e 58%);
+ border:1px solid #b78a3f;box-shadow:0 0 30px #b7862c22;text-align:left}
+.combo-reading h3{text-align:center;color:#fff0bd;font:900 1.65rem Georgia,"Yu Mincho",serif;margin:0 0 6px}
+.combo-tag{text-align:center;color:#d8b85e;font-weight:900;margin-bottom:15px}
+.combo-reading p{line-height:1.8;color:#eee1d1}
+.combo-punch{margin-top:14px;padding:13px;border-radius:12px;background:#330b13;color:#ffd9dd;font-weight:800;line-height:1.7}
 </style>
 </head>
 <body><div class="sparkles" id="sparkles"></div>
@@ -222,7 +230,7 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
   <div class="kicker">YOUR HAND</div>
   <h2>あんたの人生の手札</h2>
   <div class="hand" id="hand"></div>
-  <div class="summary" id="summary"></div>
+  <div class="combo-reading" id="comboReading"></div><div class="summary" id="summary"></div>
   <div id="saveCard" class="save-card"></div><div class="action-row">
     <button class="btn" id="saveResult">保存用画像を作る</button>
     <button class="btn secondary" id="again">もう一回、配り直す</button>
@@ -416,6 +424,43 @@ const jokerExtra={
 function extraFor(c){
   return (c.id==="RJ"||c.id==="BJ") ? jokerExtra[c.id] : powerExtra[c.suit];
 }
+
+function buildCombo(sel){
+  const powers=sel.map(c=>{
+    if(c.id==="RJ") return "規格外";
+    if(c.id==="BJ") return "逆転";
+    return c.suit;
+  });
+  const hasRJ=sel.some(c=>c.id==="RJ"), hasBJ=sel.some(c=>c.id==="BJ");
+  const labels={"♥":"人を惹きつける","♦":"価値へ変える","♣":"現実を動かす","♠":"本質を見抜く","規格外":"常識を壊す","逆転":"崩れてからひっくり返す"};
+  const a=labels[powers[0]], b=labels[powers[1]], c=labels[powers[2]];
+  let tag="", body="", punch="";
+  if(hasRJ && hasBJ){
+    tag="分類不能型｜人生そのものがワイルドカード";
+    body=`あんたの土台には「${a}力」がある。ところが眠らせている札と最後の切り札にJOKER級の揺さぶりが入る組み合わせ。決められた正解に合わせるより、状況ごと作り替えた時に強さが出る。`;
+    punch="悪いうめこ総評：普通の攻略本、たぶん途中で捨てるタイプや。";
+  }else if(hasRJ || hasBJ){
+    tag="JOKER混入型｜予定通りでは終わらん";
+    body=`最初の武器は「${a}力」。そこへ「${b}力」をどう扱うかが途中の課題になり、最後は「${c}力」で勝負する流れ。JOKERが混じるぶん、人生の節目では予定変更や独自路線が大きな転機になりやすい手札や。`;
+    punch="悪いうめこ総評：予定表は持っとけ。ただし予定表どおりになるとは思うな。";
+  }else{
+    const same=new Set(powers).size;
+    if(same===1){
+      tag=`一点突破型｜${labels[powers[0]]}力が主役`;
+      body=`3枚とも同じ系統。これは「${a}力」を、生まれつきの武器・眠らせている課題・最後の切り札まで一貫して使う手札。得意がハッキリしているぶん、使いすぎた時のクセにも気づけたらかなり強い。`;
+      punch="悪いうめこ総評：得意なんは分かった。得意一本で全部殴ろうとすな。";
+    }else if(same===2){
+      tag="二刀流型｜得意が濃い";
+      body=`あんたは「${a}力」を土台に持ち、「${b}力」をまだ十分使い切れていない。そして勝負どころでは「${c}力」が前に出る。似た力が2枚あるぶん得意分野は濃いけど、残り1枚を使えるようになると手札の幅が一気に広がる。`;
+      punch="悪いうめこ総評：同じ武器2本持って安心すな。もう1本も抜け。";
+    }else{
+      tag="三刀流型｜役割の違う3枚持ち";
+      body=`生まれつきは「${a}力」。でも今眠らせているのは「${b}力」。そして、ここぞという時に効くのが「${c}力」。3枚の役割が全部違うから、ひとつの得意だけで押すより「人・価値・行動・判断」を場面ごとに切り替えた時に強い手札や。`;
+      punch="悪いうめこ総評：札は揃ってる。問題は、出す順番や。";
+    }
+  }
+  return {tag,body,punch};
+}
 function showResults(){
   $("#game").classList.add("hidden"); $("#results").classList.remove("hidden");
   const slots=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
@@ -442,6 +487,11 @@ function showResults(){
       return `<div class="save-mini"><div class="slot">${i+1}｜${slots[i]}</div>
       <div class="cardcode${red}">${code}</div><h4>${d.title}</h4>
       <p>${d.reading}</p><p class="devil">😈 ${d.bad}</p></div>`}).join("")}</div>`; 
+  const combo=buildCombo(selected);
+  $("#comboReading").innerHTML=`<h3>3枚合わせたら、あんた何者？</h3>
+    <div class="combo-tag">${combo.tag}</div>
+    <p>${combo.body}</p>
+    <div class="combo-punch">😈 ${combo.punch}</div>`;
   const jokers=selected.filter(c=>c.id==="RJ"||c.id==="BJ");
   let text=`<div class="final">あんた、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
   if(jokers.length===1){
@@ -495,7 +545,7 @@ function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
 async function saveResultImage(){
   if(selected.length!==3) return;
 
-  const W=1080, H=1920;
+  const W=1080, H=2200;
   const c=document.createElement("canvas");
   c.width=W; c.height=H;
   const ctx=c.getContext("2d");
@@ -509,8 +559,8 @@ async function saveResultImage(){
   glow.addColorStop(0,"rgba(190,35,63,.38)"); glow.addColorStop(1,"rgba(190,35,63,0)");
   ctx.fillStyle=glow; ctx.fillRect(0,0,W,620);
 
-  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,1864);
-  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,1836);
+  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,2144);
+  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,2116);
 
   ctx.textAlign="center";
   ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
@@ -569,22 +619,32 @@ async function saveResultImage(){
     drawWrapped(d.bad,x,1462,265,30,4,"20px sans-serif","#f3dedf");
   });
 
+  const combo=buildCombo(selected);
+  ctx.fillStyle="#1b1015"; ctx.strokeStyle="#a77d38"; ctx.lineWidth=3;
+  roundRect(245,1580,590,350,20,true,true);
+  ctx.fillStyle="#fff0bd"; ctx.font="900 31px sans-serif"; ctx.textAlign="center";
+  ctx.fillText("3枚合わせたら、あんた何者？",540,1630);
+  ctx.fillStyle="#d8b85e"; ctx.font="800 23px sans-serif";
+  drawWrapped(combo.tag,540,1675,520,31,2,"800 23px sans-serif","#d8b85e");
+  drawWrapped(combo.body,540,1750,520,30,5,"20px sans-serif","#eee1d1");
+  drawWrapped("😈 "+combo.punch,540,1905,520,29,3,"700 19px sans-serif","#ffb7c0");
+
   // Mascots in saved image
   async function loadPic(src){
     return new Promise((resolve,reject)=>{const im=new Image(); im.onload=()=>resolve(im); im.onerror=reject; im.src=src;});
   }
   try{
     const [u,bad]=await Promise.all([loadPic(IMG.normal),loadPic(IMG.bad)]);
-    ctx.drawImage(u,75,1580,180,180);
-    ctx.drawImage(bad,825,1580,180,180);
+    ctx.drawImage(u,55,1650,175,175);
+    ctx.drawImage(bad,850,1650,175,175);
   }catch(e){}
 
-  ctx.fillStyle="#fff0bf"; ctx.font="900 36px sans-serif"; ctx.textAlign="center";
-  ctx.fillText("あんた、ええ手札持ってるやん。",540,1650);
-  ctx.fillStyle="#e8bd61"; ctx.font="900 47px sans-serif";
-  ctx.fillText("ほな、いつ切るん？",540,1715);
+  ctx.fillStyle="#fff0bf"; ctx.font="900 34px sans-serif"; ctx.textAlign="center";
+  ctx.fillText("あんた、ええ手札持ってるやん。",540,2020);
+  ctx.fillStyle="#e8bd61"; ctx.font="900 44px sans-serif";
+  ctx.fillText("ほな、いつ切るん？",540,2075);
   ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
-  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1835);
+  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,2150);
 
   // iPhone: show the actual PNG and save by long press.
   const png=c.toDataURL("image/png");
