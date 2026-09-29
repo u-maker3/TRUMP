@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09070a">
+<title>人生の手札診断</title>
+<style>
+:root{
+  --bg:#09070a; --panel:#151017; --gold:#e8bd61; --gold2:#fff0b0;
+  --red:#a30f22; --ink:#f8f1e5; --muted:#bdb3a5;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%,#40101b 0,transparent 34%),
+    radial-gradient(circle at 20% 70%,#211425 0,transparent 34%),
+    linear-gradient(180deg,#080608,#100a0e 55%,#050405);
+}
+.wrap{width:min(980px,100%);margin:auto;padding:24px 16px 64px;text-align:center}
+.hero{padding:26px 10px 10px}
+.kicker{letter-spacing:.24em;color:var(--gold);font-size:.78rem;font-weight:800}
+h1{font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2.2rem,10vw,4.8rem);margin:.18em 0 .08em;color:#fff4ce;text-shadow:0 0 25px #a20f26}
+.lead{margin:0 auto;max-width:620px;color:#ddd0bd;line-height:1.8}
+.quote{margin:18px auto 6px;color:var(--gold2);font-weight:800}
+.btn{
+  border:1px solid #f0ca73;border-radius:999px;padding:14px 24px;
+  background:linear-gradient(180deg,#a9162d,#650815);color:#fff6dc;
+  font-size:1rem;font-weight:900;box-shadow:0 8px 26px #0008, inset 0 0 12px #ffb05d33;
+  cursor:pointer
+}
+.btn.secondary{background:#171117;color:#ead8ae}
+.hidden{display:none!important}
+#intro .mascot{width:min(230px,58vw);height:230px;object-fit:contain;margin:12px auto;display:block}
+.stage{margin-top:22px}
+.instruction{font-weight:900;color:#f8e5b0;margin-bottom:14px}
+.counter{color:var(--gold);margin-bottom:12px;font-weight:800}
+.deck{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;
+  max-width:690px;margin:0 auto
+}
+.pick{
+  aspect-ratio:2/3;border:0;padding:0;border-radius:9px;overflow:hidden;
+  background:#20161b;box-shadow:0 5px 14px #000a;cursor:pointer;
+  transition:.2s transform,.2s filter,.2s opacity
+}
+.pick img{width:100%;height:100%;object-fit:cover;display:block}
+.pick:hover{transform:translateY(-5px)}
+.pick.chosen{filter:brightness(.35);transform:scale(.94);pointer-events:none}
+.pick.chosen:after{content:"✓";position:absolute}
+@media(max-width:620px){.deck{grid-template-columns:repeat(5,1fr);gap:6px}.wrap{padding-inline:10px}}
+.results{margin-top:28px}
+.results h2{font-family:Georgia,"Yu Mincho",serif;color:#ffe5a3;font-size:2rem}
+.hand{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+@media(max-width:760px){.hand{grid-template-columns:1fr}}
+.result{
+  background:linear-gradient(180deg,#1d151b,#0d0a0c);
+  border:1px solid #6f5530;border-radius:20px;padding:16px;
+  box-shadow:0 12px 32px #0009;position:relative;overflow:hidden
+}
+.slot{color:#d7b96d;font-size:.8rem;font-weight:900;letter-spacing:.12em}
+.face{
+  width:min(190px,70%);aspect-ratio:2/3;margin:12px auto;border-radius:13px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#f8f2e7;color:#171015;border:5px double #c89a3d;
+  box-shadow:0 7px 18px #0008;position:relative
+}
+.face.red{color:#a40d20}
+.face .rank{font-family:Georgia,serif;font-size:4rem;font-weight:900;line-height:.9}
+.face .suit{font-size:3.4rem;line-height:1}
+.face.joker{padding:0;border:0;background:#000}
+.face.joker img{width:100%;height:100%;object-fit:cover;border-radius:13px}
+.power{color:#d5bc7e;font-size:.85rem;font-weight:900}
+.result h3{font-size:1.35rem;margin:.4em 0;color:#fff0bf}
+.reading{line-height:1.75;color:#eee2d4;text-align:left}
+.use{background:#21151a;border-left:3px solid var(--gold);padding:10px 12px;border-radius:8px;text-align:left;line-height:1.6}
+.bad{margin-top:12px;padding:12px;border-radius:12px;background:#340b13;text-align:left;line-height:1.6}
+.bad b{color:#ffb0b9}
+.summary{
+  margin:20px auto 0;max-width:720px;padding:20px;border:1px solid #9b7437;
+  border-radius:18px;background:#100c0e
+}
+.duo{display:flex;justify-content:center;align-items:end;gap:6px;margin-top:14px}
+.duo img{height:130px;max-width:42%;object-fit:contain}
+.final{font-size:1.25rem;font-weight:900;line-height:1.8}
+.error{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:#ff465f;letter-spacing:.1em;font-weight:900
+}
+footer{margin-top:36px;color:#776f68;font-size:.72rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section id="intro" class="hero">
+  <div class="kicker">UMEKO ORIGINAL CARD DIAGNOSIS</div>
+  <h1>人生の手札診断</h1>
+  <p class="lead">配られたカードに文句言う前に、手札見よか。<br>直感で3枚。あんたが持ってる武器、腐らせてる武器、最後の切り札を暴きます。</p>
+  <img class="mascot" src="umeko.PNG" alt="うめこ">
+  <div class="quote">配られたカードは変えられへん。<br>でも、切り方はあんた次第。</div>
+  <button class="btn" id="start">手札を配ってもらう</button>
+</section>
+
+<section id="game" class="stage hidden">
+  <div class="instruction">考えすぎ禁止。直感で3枚選んでな。</div>
+  <div class="counter" id="counter">0 / 3 枚</div>
+  <div class="deck" id="deck"></div>
+</section>
+
+<section id="results" class="results hidden">
+  <div class="kicker">YOUR HAND</div>
+  <h2>あんたの人生の手札</h2>
+  <div class="hand" id="hand"></div>
+  <div class="summary" id="summary"></div>
+  <div style="margin-top:18px"><button class="btn secondary" id="again">もう一回、配り直す</button></div>
+</section>
+<footer>※遊びとして楽しむオリジナル診断です。結果は人生の決定を代わりにするものではありません。</footer>
+</main>
+
+<script>
+const IMG={
+  normal:"umeko.PNG", bad:"bad_umeko.PNG", back:"card_back.PNG",
+  redJoker:"red_joker.PNG", blackJoker:"black_joker.PNG"
+};
+const suitInfo={
+  "♥":{key:"heart",power:"惹きつける力",color:"red"},
+  "♦":{key:"diamond",power:"価値にする力",color:"red"},
+  "♣":{key:"club",power:"動かす力",color:"black"},
+  "♠":{key:"spade",power:"見抜く力",color:"black"}
+};
+const data={
+"♥":[
+["A","始める","縁の火付け役","初対面でも自然に関係を始められる。","新しい出会いや、止まっている人間関係を動かしたい時。","待ってても誰も玄関まで来ぇへんで"],
+["2","つなぐ","ご縁の接着剤","人と人を結びつけるのが得意。","人同士を紹介したり、チームの橋渡しをする時。","何でもくっつけたらええ訳ちゃう"],
+["3","広げる","愛嬌拡散機","楽しさを周囲へ広げ、人を集める。","場を明るくしたい時や、仲間を増やしたい時。","喋りすぎて本題どっか行ってるで"],
+["4","固める","安心基地","信頼関係をじっくり築ける。","長く続く関係や居場所を作る時。","居心地よすぎて便利屋になるな"],
+["5","変える","空気チェンジャー","場の空気や人の気持ちを切り替える。","重たい空気を変えたい時や、新風を入れたい時。","空気読みすぎて自分まで変身すな"],
+["6","育てる","愛情育成係","人の良さを見つけて伸ばせる。","誰かを支えたり、関係を育てる時。","世話焼きとお節介は隣同士や"],
+["7","掘る","本音発掘人","表面ではなく心の奥に触れられる。","本音を知りたい時や、深い対話が必要な時。","聞いてない秘密まで掘るな"],
+["8","動かす","巻き込み磁石","人の心を動かして行動につなげる。","一人では動かない企画を前へ進める時。","全員連れて行こうとすな"],
+["9","極める","愛され職人","人との関係を深く成熟させられる。","大切な縁を長く育てたい時。","好かれる努力まで始めたら迷子や"],
+["10","完成させる","ご縁の仕上げ人","バラバラな人間関係を一つにまとめる。","チームや集まりを一つに着地させる時。","最後の尻拭いまで担当せんでええ"],
+["J","攻める","懐突入型","距離を縮める度胸と瞬発力がある。","初対面や勝負どころで一気に距離を縮める時。","土足で入ったらただの不審者や"],
+["Q","魅せる","天然人たらし","存在感や愛嬌そのものが魅力になる。","自分自身を前に出したい時。","全員に好かれようとしたら勤務時間24時間や"],
+["K","率いる","人心掌握役","信頼によって人をまとめられる。","人の気持ちを大事にしながら先頭に立つ時。","王様ちゃう。ちゃんと人の話聞け"]
+],
+"♦":[
+["A","始める","ゼロイチ錬金術師","何もないところから価値の種を生み出す。","新商品、新企画、新しい仕事を始める時。","思いついた瞬間だけ社長になるな"],
+["2","つなぐ","価値の仲人","別々のものを組み合わせ、新しい価値を作る。","異なる得意や素材を掛け合わせる時。","何でもコラボしたらええ訳ちゃう"],
+["3","広げる","才能拡声器","良いものを見つけ、魅力が伝わる形に広げる。","発信、紹介、PRで価値を届ける時。","宣伝する前に中身確認したか"],
+["4","固める","土台職人","アイデアを安定して続く形にできる。","仕組みや基盤を整える時。","固めすぎて化石にすな"],
+["5","変える","価値変換機","一見ムダなものにも別の使い道を見つける。","行き詰まったものを別角度から活かす時。","何でも『使える』で捨てへんから家パンパンや"],
+["6","育てる","才能育成家","小さな可能性を時間をかけて価値に変える。","未完成の才能や企画を育てる時。","芽ぇ出てない鉢に水3リットルやるな"],
+["7","掘る","お宝発掘人","人が見逃す価値や才能を見つけ出す。","埋もれた強みや素材を探す時。","掘りすぎて別の趣味始めてるで"],
+["8","動かす","価値の実行屋","才能やアイデアを実際の成果へ動かせる。","考えていたものを現実に出す時。","思いついた翌日に販売開始すな"],
+["9","極める","一芸錬成師","得意分野を磨き、代わりのない価値にできる。","一つの技術や専門性を磨く時。","極める前に次のん見つけんな"],
+["10","完成させる","商品化職人","アイデアを人に渡せる完成形まで仕上げる。","作品やサービスを世に出せる形にする時。","完成したのにまた改装始めるな"],
+["J","攻める","チャンス強奪型","好機を見つけたら素早く価値へ変えられる。","チャンスが来た瞬間に掴みに行く時。","チャンスちゃう。ただの思いつきの時あるで"],
+["Q","魅せる","価値プロデューサー","魅力を見せ方まで含めて価値にできる。","ブランディングや見せ方を整える時。","包装紙だけ高級にすなよ"],
+["K","率いる","価値創造王","人・才能・資源をまとめ、大きな価値へ育てる。","複数の力を束ねて事業や企画を動かす時。","王国作る前に帳簿つけろ"]
+],
+"♣":[
+["A","始める","先陣スターター","誰も動いていないところから最初の一歩を踏み出せる。","誰かが始めるのを待っている場面。","『とりあえず』で始めた案件、何個ある？"],
+["2","つなぐ","タッグメーカー","人と力を組み合わせ、一緒に動き出せる。","一人より誰かと組んだ方が速い時。","相方決める前に本人に聞け"],
+["3","広げる","行動伝染人","自分が動くことで周囲まで動かしていく。","周りの温度を上げたい時。","一人で始めたのに何でイベントになってんねん"],
+["4","固める","継続エンジン","始めたことを習慣にして積み上げられる。","毎日の積み重ねが結果になる時。","ルーティン増やしすぎて自分を雇うな"],
+["5","変える","方向転換の達人","状況を見ながら素早くやり方を変えられる。","予定通り進まない時。","『改良です』言うて別物にすな"],
+["6","育てる","成長ブースター","動きながら改善し、小さな成果を大きく育てる。","まず動いて、後から育てる時。","育つ前に新しい苗買うてくんな"],
+["7","掘る","攻略探究者","試して検証して、自分なりの攻略法を見つける。","試行錯誤が必要な課題に向き合う時。","調べ始めて3時間。最初何するんやった？"],
+["8","動かす","爆走エンジン","決めた瞬間、一気に現実を動かす推進力がある。","停滞をぶち破って前進したい時。","速い。とにかく一回止まれ。"],
+["9","極める","実践マスター","経験を重ねるほど技術と行動精度が上がる。","頭より実践で腕を磨く時。","回数こなしただけで師匠名乗んな"],
+["10","完成させる","完遂ランナー","スタートからゴールまで走り切る力を持つ。","最後までやり抜く必要がある時。","ゴールした瞬間、次のスタート切るな"],
+["J","攻める","突破特攻隊","壁があっても恐れず前へ出て道を開く。","誰も突破口を見つけられない時。","扉や。壁ちゃう。まずノブ回せ"],
+["Q","魅せる","ムーブメントメーカー","楽しそうに動く姿そのものが人を巻き込む。","人を誘い、流れを作りたい時。","楽しそうすぎて何してる人か分からん"],
+["K","率いる","進軍リーダー","方向を示し、人を率いて物事を前進させる。","みんなで一つのゴールへ進む時。","全員ついて来てると思うな。後ろ見ろ"]
+],
+"♠":[
+["A","始める","真実の一閃","最初の違和感から、本質への入口を見つける。","何かがおかしいと感じた時。","その『なんか変』、だいたい後で当たるやつ"],
+["2","つなぐ","点と点の観測者","バラバラな情報から隠れたつながりを見つける。","情報が散らばって答えが見えない時。","伏線回収しすぎて勝手にドラマ作るな"],
+["3","広げる","視界拡張者","一方向だけでなく、複数の視点から物事を捉える。","別の見方が必要な時。","見えすぎて話ややこししてんの自分やで"],
+["4","固める","静かな参謀","情報を整理し、ブレない判断軸を作れる。","感情に流されず判断したい時。","会議終わってから正解言うな"],
+["5","変える","違和感破壊者","『当たり前』を疑い、より良い答えへ切り替えられる。","古いやり方を見直す時。","何でも疑ったら説明書まで敵になるで"],
+["6","育てる","知恵の錬成師","経験から学びを抽出し、次の判断に活かせる。","失敗や経験を次へつなげる時。","黒歴史まで教材にすな"],
+["7","掘る","深層ダイバー","表面では満足せず、物事の奥にある理由まで探れる。","原因や本音を深く知る必要がある時。","深いねん。もう海底や。帰ってこい"],
+["8","動かす","一手先の策士","状況を読み、最も効果的な一手を選んで動ける。","無駄打ちせず一手を選びたい時。","読みすぎて相手まだ何もしてへん"],
+["9","極める","本質鑑定人","経験と洞察を重ね、余計なものに惑わされなくなる。","情報が多すぎる中で核心を見たい時。","一発で見抜いても、顔に出すな"],
+["10","完成させる","答えを出す人","複雑な状況を整理し、最後に一つの結論へ導ける。","考え続ける段階を終えて決める時。","答え出すん早いねん。みんなまだ説明中や"],
+["J","攻める","矛盾狩り","おかしな点を恐れず突き、突破口を見つける。","矛盾や問題を曖昧にできない時。","正論という名の鈍器を置け"],
+["Q","魅せる","静謐のカリスマ","多くを語らずとも、洞察と存在感で人を惹きつける。","言葉を重ねず存在感で示したい時。","黙ってたら全部分かってる風に見える。得やな"],
+["K","率いる","盤上の支配者","全体を俯瞰し、先を読みながら最善の方向へ導く。","複雑な状況全体を見て舵を取る時。","全部読めても、人間は予定通り動かんで。"]
+]};
+const jokerData=[
+ {id:"RJ",name:"RED JOKER",title:"予定調和破壊者",power:"分類：知らん。枠に入らん。",reading:"決められた道を上手に歩くより、道そのものを作り替える力を持つ札。人と同じやり方では力が出にくく、「そんなやり方アリなん？」から結果を作る。",use:"行き詰まった時。常識通りにやっても面白くない時。ゼロから何か生み出す時。",bad:"普通になろうとしてたん？ 無理やで。",img:IMG.redJoker},
+ {id:"BJ",name:"BLACK JOKER",title:"大逆転者",power:"分類：土壇場専門。",reading:"順調な時より「もうアカン」から異様に強い札。想定外・失敗・予定変更すら材料にして、最後にひっくり返す力を持つ。",use:"計画が崩れた時。選択肢がなくなった時。「もうこれしかない」になった時。",bad:"最初から本気出せ。毎回崖っぷち待つな。",img:IMG.blackJoker}
+];
+
+let cards=[];
+for(const suit of Object.keys(data)){
+  data[suit].forEach(x=>cards.push({
+    id:suit+x[0], suit, rank:x[0], action:x[1], title:x[2],
+    reading:x[3], use:x[4], bad:x[5], power:suitInfo[suit].power
+  }));
+}
+cards.push(...jokerData);
+let shuffled=[],selected=[];
+
+const $=s=>document.querySelector(s);
+function shuffle(a){
+  a=[...a];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+function deal(){
+  selected=[]; shuffled=shuffle(cards);
+  $("#results").classList.add("hidden"); $("#game").classList.remove("hidden");
+  $("#counter").textContent="0 / 3 枚";
+  const deck=$("#deck"); deck.innerHTML="";
+  shuffled.forEach((card,i)=>{
+    const b=document.createElement("button");
+    b.className="pick"; b.setAttribute("aria-label",`${i+1}枚目のカード`);
+    b.innerHTML=`<img src="${IMG.back}" alt="伏せたカード">`;
+    b.onclick=()=>{
+      if(selected.length>=3 || b.classList.contains("chosen")) return;
+      b.classList.add("chosen"); selected.push(card);
+      $("#counter").textContent=`${selected.length} / 3 枚`;
+      if(selected.length===3) setTimeout(showResults,450);
+    };
+    deck.appendChild(b);
+  });
+}
+function face(c){
+  if(c.id==="RJ"||c.id==="BJ") return `<div class="face joker"><img src="${c.img}" alt="${c.name}"></div>`;
+  const cls=suitInfo[c.suit].color==="red"?" red":"";
+  return `<div class="face${cls}"><div class="rank">${c.rank}</div><div class="suit">${c.suit}</div></div>`;
+}
+function showResults(){
+  $("#game").classList.add("hidden"); $("#results").classList.remove("hidden");
+  const slots=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
+  $("#hand").innerHTML=selected.map((c,i)=>`
+    <article class="result">
+      <div class="slot">${i+1}｜${slots[i]}</div>
+      ${face(c)}
+      <div class="power">${c.id==="RJ"||c.id==="BJ"?c.power:`${c.power} × ${c.action}`}</div>
+      <h3>${c.title}</h3>
+      <p class="reading">${c.reading}</p>
+      <div class="use"><b>この札の使いどころ</b><br>${c.use}</div>
+      <div class="bad"><b>😈 悪いうめこの余計な一言</b><br>${c.bad}</div>
+    </article>`).join("");
+  const jokers=selected.filter(c=>c.id==="RJ"||c.id==="BJ");
+  let text=`<div class="final">あんた、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
+  if(jokers.length===1){
+    const pos=selected.indexOf(jokers[0]);
+    const msg=[
+      "そもそも規格外。最初から人と同じ型に入れんでよろしい。",
+      "自分を普通の枠に収めようとして、その札を腐らせてる可能性あり。",
+      "最後は予定通りに勝とうとせんでええ。ひっくり返すのが切り札や。"
+    ][pos];
+    text=`<div class="error">SYSTEM ERROR<br>この人、分類できません。</div><p class="final">${msg}<br>悪いうめこ「知らん。好きにせぇ。」</p>`;
+  }else if(jokers.length===2){
+    text=`<div class="error">判 定 不 能</div><p class="final">JOKER 2枚引き。<br><b>うめこにも手ぇ負えません。</b></p>`;
+  }
+  $("#summary").innerHTML=text+`<div class="duo"><img src="${IMG.normal}" alt="うめこ"><img src="${IMG.bad}" alt="悪いうめこ"></div>`;
+  window.scrollTo({top:$("#results").offsetTop-10,behavior:"smooth"});
+}
+$("#start").onclick=()=>{$("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"})};
+$("#again").onclick=()=>{deal();window.scrollTo({top:0,behavior:"smooth"})};
+</script>
+</body>
+</html>
