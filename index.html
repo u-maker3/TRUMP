@@ -160,6 +160,22 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
 .save-mini p{margin:6px 0;line-height:1.45;font-size:.8rem;color:#e8ddd0}
 .save-mini .devil{color:#ffabb5}
 @media(max-width:520px){.save-grid{grid-template-columns:1fr}.save-mini p{font-size:.9rem}}
+
+.save-preview{
+  position:fixed; inset:0; z-index:120; background:#050306f2;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  padding:calc(18px + env(safe-area-inset-top)) 14px 30px; overflow:auto;
+}
+.save-preview img{
+  display:block; width:min(92vw,720px); height:auto; margin:10px auto;
+  border-radius:18px; border:2px solid #b78a3f;
+  box-shadow:0 0 38px #d2a64655;
+  -webkit-touch-callout:default; user-select:auto;
+}
+.save-preview .guide{
+  max-width:720px; color:#fff0c0; font-weight:900; line-height:1.7;
+}
+.save-preview .closePreview{margin:8px 0 18px}
 </style>
 </head>
 <body><div class="sparkles" id="sparkles"></div>
@@ -202,10 +218,10 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
   <div class="hand" id="hand"></div>
   <div class="summary" id="summary"></div>
   <div id="saveCard" class="save-card"></div><div class="action-row">
-    <button class="btn" id="saveResult">結果を画像保存</button>
+    <button class="btn" id="saveResult">保存用画像を作る</button>
     <button class="btn secondary" id="again">もう一回、配り直す</button>
   </div>
-  <div class="save-note">画像は 1080×1350px のPNGで保存されます。</div>
+  <div class="save-note">iPhone対応：画像を作ったら、表示された画像を長押し →「写真に保存」してな。</div>
 </section>
 <footer>※遊びとして楽しむオリジナル診断です。結果は人生の決定を代わりにするものではありません。</footer>
 </main>
@@ -432,30 +448,94 @@ function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
   return y+lines.length*lineHeight;
 }
 async function saveResultImage(){
-  const node=$("#saveCard");
-  const w=Math.ceil(node.getBoundingClientRect().width);
-  const h=Math.ceil(node.getBoundingClientRect().height);
-  const clone=node.cloneNode(true);
-  clone.style.width=w+"px"; clone.style.margin="0"; clone.style.background="#100b0e";
-  const css=[...document.styleSheets].map(ss=>{try{return [...ss.cssRules].map(r=>r.cssText).join("")}catch(e){return""}}).join("");
-  const markup=new XMLSerializer().serializeToString(clone);
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
-  <foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>${css}</style>${markup}</div></foreignObject></svg>`;
-  const blob=new Blob([svg],{type:"image/svg+xml;charset=utf-8"});
-  const url=URL.createObjectURL(blob), img=new Image();
-  img.onload=()=>{
-    const scale=Math.min(2,1080/w);
-    const c=document.createElement("canvas");c.width=Math.round(w*scale);c.height=Math.round(h*scale);
-    const ctx=c.getContext("2d");ctx.scale(scale,scale);ctx.drawImage(img,0,0);URL.revokeObjectURL(url);
-    c.toBlob(b=>{
-      if(!b){alert("画像化できへんかった🤣 スクショ保存してな。");return}
-      const u=URL.createObjectURL(b); const a=document.createElement("a");
-      a.href=u;a.download="jinsei_no_tefuda.PNG";document.body.appendChild(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(u),3000);
-    },"image/png");
-  };
-  img.onerror=()=>{URL.revokeObjectURL(url);alert("この端末では直接保存できへんかった🤣 結果カードをスクショしてな。")};
-  img.src=url;
+  if(selected.length!==3) return;
+
+  const W=1080, H=1350;
+  const c=document.createElement("canvas");
+  c.width=W; c.height=H;
+  const ctx=c.getContext("2d");
+
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,"#2b0812"); bg.addColorStop(.35,"#120b10"); bg.addColorStop(1,"#050405");
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // decorative glow
+  const glow=ctx.createRadialGradient(540,120,10,540,120,520);
+  glow.addColorStop(0,"rgba(190,35,63,.38)"); glow.addColorStop(1,"rgba(190,35,63,0)");
+  ctx.fillStyle=glow; ctx.fillRect(0,0,W,620);
+
+  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,1294);
+  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,1266);
+
+  ctx.textAlign="center";
+  ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
+  ctx.fillStyle="#fff0c0"; ctx.font="900 61px serif"; ctx.fillText("人生の手札診断",540,154);
+  ctx.fillStyle="#c9bba7"; ctx.font="25px sans-serif";
+  ctx.fillText("配られたカードは変えられへん。でも、切り方はあんた次第。",540,204);
+
+  const labels=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
+  const xs=[190,540,890];
+
+  function roundRect(x,y,w,h,r,fill,stroke){
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,r);
+    if(fill) ctx.fill(); if(stroke) ctx.stroke();
+  }
+  function drawWrapped(text,x,y,maxWidth,lineHeight,maxLines,font,fill){
+    ctx.font=font; ctx.fillStyle=fill; ctx.textAlign="center";
+    let line="", lines=[];
+    for(const ch of text){
+      const test=line+ch;
+      if(ctx.measureText(test).width>maxWidth && line){lines.push(line); line=ch}else line=test;
+    }
+    if(line) lines.push(line);
+    lines=lines.slice(0,maxLines);
+    lines.forEach((ln,i)=>ctx.fillText(ln,x,y+i*lineHeight));
+    return y+lines.length*lineHeight;
+  }
+
+  selected.forEach((d,i)=>{
+    const x=xs[i], left=x-155, top=250;
+    ctx.fillStyle="#151015"; ctx.strokeStyle="#8f6a35"; ctx.lineWidth=3;
+    roundRect(left,top,310,790,22,true,true);
+
+    ctx.fillStyle="#d7b96d"; ctx.font="700 20px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(labels[i],x,292);
+
+    const isJ=d.id==="RJ"||d.id==="BJ";
+    const red=d.suit==="♥"||d.suit==="♦"||d.id==="RJ";
+    ctx.fillStyle=red?"#ff5d70":"#f3e7d2";
+    ctx.font=isJ?"900 35px Georgia":"900 76px Georgia";
+    ctx.fillText(isJ?d.name:`${d.rank} ${d.suit}`,x,395);
+
+    ctx.fillStyle="#d5bc7e"; ctx.font="700 19px sans-serif";
+    drawWrapped(isJ?d.power:`${d.power} × ${d.action}`,x,447,270,28,2,"700 19px sans-serif","#d5bc7e");
+
+    drawWrapped(d.title,x,515,270,38,2,"900 29px sans-serif","#fff0bf");
+    drawWrapped(d.reading,x,615,266,34,6,"22px sans-serif","#eee2d4");
+
+    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif"; ctx.fillText("😈 悪いうめこ",x,875);
+    drawWrapped(d.bad,x,915,265,32,4,"21px sans-serif","#f3dedf");
+  });
+
+  ctx.fillStyle="#fff0bf"; ctx.font="900 36px sans-serif"; ctx.textAlign="center";
+  ctx.fillText("あんた、ええ手札持ってるやん。",540,1122);
+  ctx.fillStyle="#e8bd61"; ctx.font="900 47px sans-serif";
+  ctx.fillText("ほな、いつ切るん？",540,1190);
+  ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
+  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1280);
+
+  // IMPORTANT: don't auto-download on iPhone. Show the actual PNG as an image.
+  const png=c.toDataURL("image/png");
+  const overlay=document.createElement("div");
+  overlay.className="save-preview";
+  overlay.innerHTML=`
+    <div class="guide">できたで🤣<br>
+    ↓ この画像を <b>長押し</b> →「写真に保存」してな。<br>
+    <span style="font-size:.82rem;color:#cbbba5">Safariでメニューが出にくい時は画像を一度タップしてから長押し。</span></div>
+    <img src="${png}" alt="人生の手札診断 保存用画像">
+    <button class="btn secondary closePreview">診断に戻る</button>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector(".closePreview").onclick=()=>overlay.remove();
 }
 
 $("#start").onclick=()=>{$("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"})};
