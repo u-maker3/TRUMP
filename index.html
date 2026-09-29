@@ -176,6 +176,12 @@ footer{margin-top:36px;color:#776f68;font-size:.72rem}
   max-width:720px; color:#fff0c0; font-weight:900; line-height:1.7;
 }
 .save-preview .closePreview{margin:8px 0 18px}
+
+.deepread{margin-top:12px;text-align:left;display:grid;gap:8px}
+.deepbox{padding:10px 12px;border-radius:10px;background:#171116;border:1px solid #4f3d2b;line-height:1.65}
+.deepbox b{color:#e5c678}
+.deepbox.warn{background:#211015;border-color:#6b3039}
+.deepbox.warn b{color:#ff9fac}
 </style>
 </head>
 <body><div class="sparkles" id="sparkles"></div>
@@ -376,6 +382,40 @@ function makeSparkles(){
 }
 makeSparkles();
 
+
+const powerExtra={
+ "♥":{
+   core:"人との間に温度を生む札。あんた自身の人柄や共感力が、相手の警戒心をほどく武器になる。",
+   shine:"人と関わるほど強くなる。紹介・接客・発信・チームづくりでは、数字に出にくい『また会いたい』を作れる。",
+   shadow:"相手を優先しすぎると、自分の本音が行方不明になる。好かれることと、合わせ続けることは別モンや。"
+ },
+ "♦":{
+   core:"『これ、何かに使えへん？』を価値へ変える札。才能・素材・経験を、人に届く形へ編集する武器。",
+   shine:"企画、商品化、見せ方、価格づけなど、ぼんやりした良さを『欲しい』に変える場面で強い。",
+   shadow:"価値を作ることに夢中になると、完成前に次のアイデアへ飛びがち。作るだけやなく、届け切って完成や。"
+ },
+ "♣":{
+   core:"考えて終わらず、現実を一歩動かす札。行動そのものが周囲のスイッチまで入れる武器になる。",
+   shine:"停滞している時、誰も一歩目を出せない時ほど本領発揮。試しながら答えを作る方が速い。",
+   shadow:"速さが武器なぶん、確認不足と抱え込みには注意。全部自分で走ったら、後ろ誰もおらん時あるで。"
+ },
+ "♠":{
+   core:"表面の言葉より、その奥の構造や違和感を読む札。見落とされている本質を拾うのが武器。",
+   shine:"分析、判断、改善、相談など『何がほんまの問題？』を見つける場面で強い。",
+   shadow:"見えすぎると考えすぎにもなる。全部理解してから動こうとすると、答えだけ立派で本人止まってるで。"
+ }
+};
+const jokerExtra={
+ RJ:{core:"型から外れた時に急に強くなる特殊札。正解を守るより、自分のルールを作った方が能力が出る。",
+     shine:"前例がない、新しい、誰もやってない。そんな場面ほど出番。『普通はこう』が効かない時の突破札。",
+     shadow:"変わってること自体が目的になったらただの迷子。壊した後に何を作るかまでがJOKERの仕事や。"},
+ BJ:{core:"崩れた状況を材料に変える特殊札。予定変更や失敗から、別ルートを即席で作れるしぶとさが武器。",
+     shine:"ピンチ、締切直前、想定外。普通なら止まる場面で頭と行動が急に噛み合う。",
+     shadow:"土壇場で強いからって毎回土壇場を作る必要はない。平常運転も覚えたらもっと怖いで。"}
+};
+function extraFor(c){
+  return (c.id==="RJ"||c.id==="BJ") ? jokerExtra[c.id] : powerExtra[c.suit];
+}
 function showResults(){
   $("#game").classList.add("hidden"); $("#results").classList.remove("hidden");
   const slots=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
@@ -387,6 +427,11 @@ function showResults(){
       <h3>${c.title}</h3>
       <p class="reading">${c.reading}</p>
       <div class="use"><b>この札の使いどころ</b><br>${c.use}</div>
+      <div class="deepread">
+        <div class="deepbox"><b>この手札の正体</b><br>${extraFor(c).core}</div>
+        <div class="deepbox"><b>うまく切れたら</b><br>${extraFor(c).shine}</div>
+        <div class="deepbox warn"><b>腐らせると</b><br>${extraFor(c).shadow}</div>
+      </div>
       <div class="bad"><b>😈 悪いうめこの余計な一言</b><br>${c.bad}</div>
     </article>`).join("");
   $("#saveCard").innerHTML=`<div class="save-title">人生の手札診断</div>
@@ -450,7 +495,7 @@ function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
 async function saveResultImage(){
   if(selected.length!==3) return;
 
-  const W=1080, H=1350;
+  const W=1080, H=1920;
   const c=document.createElement("canvas");
   c.width=W; c.height=H;
   const ctx=c.getContext("2d");
@@ -464,8 +509,8 @@ async function saveResultImage(){
   glow.addColorStop(0,"rgba(190,35,63,.38)"); glow.addColorStop(1,"rgba(190,35,63,0)");
   ctx.fillStyle=glow; ctx.fillRect(0,0,W,620);
 
-  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,1294);
-  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,1266);
+  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,1864);
+  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,1836);
 
   ctx.textAlign="center";
   ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
@@ -496,7 +541,7 @@ async function saveResultImage(){
   selected.forEach((d,i)=>{
     const x=xs[i], left=x-155, top=250;
     ctx.fillStyle="#151015"; ctx.strokeStyle="#8f6a35"; ctx.lineWidth=3;
-    roundRect(left,top,310,790,22,true,true);
+    roundRect(left,top,310,1180,22,true,true);
 
     ctx.fillStyle="#d7b96d"; ctx.font="700 20px sans-serif"; ctx.textAlign="center";
     ctx.fillText(labels[i],x,292);
@@ -513,23 +558,40 @@ async function saveResultImage(){
     drawWrapped(d.title,x,515,270,38,2,"900 29px sans-serif","#fff0bf");
     drawWrapped(d.reading,x,615,266,34,6,"22px sans-serif","#eee2d4");
 
-    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif"; ctx.fillText("😈 悪いうめこ",x,875);
-    drawWrapped(d.bad,x,915,265,32,4,"21px sans-serif","#f3dedf");
+    const ex=extraFor(d);
+    ctx.fillStyle="#e5c678"; ctx.font="700 19px sans-serif"; ctx.fillText("この手札の正体",x,855);
+    drawWrapped(ex.core,x,892,265,29,5,"19px sans-serif","#eee2d4");
+    ctx.fillStyle="#e5c678"; ctx.font="700 19px sans-serif"; ctx.fillText("うまく切れたら",x,1050);
+    drawWrapped(ex.shine,x,1087,265,29,5,"19px sans-serif","#eee2d4");
+    ctx.fillStyle="#ff9fac"; ctx.font="700 19px sans-serif"; ctx.fillText("腐らせると",x,1242);
+    drawWrapped(ex.shadow,x,1279,265,29,5,"19px sans-serif","#f3dedf");
+    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif"; ctx.fillText("😈 悪いうめこ",x,1425);
+    drawWrapped(d.bad,x,1462,265,30,4,"20px sans-serif","#f3dedf");
   });
 
-  ctx.fillStyle="#fff0bf"; ctx.font="900 36px sans-serif"; ctx.textAlign="center";
-  ctx.fillText("あんた、ええ手札持ってるやん。",540,1122);
-  ctx.fillStyle="#e8bd61"; ctx.font="900 47px sans-serif";
-  ctx.fillText("ほな、いつ切るん？",540,1190);
-  ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
-  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1280);
+  // Mascots in saved image
+  async function loadPic(src){
+    return new Promise((resolve,reject)=>{const im=new Image(); im.onload=()=>resolve(im); im.onerror=reject; im.src=src;});
+  }
+  try{
+    const [u,bad]=await Promise.all([loadPic(IMG.normal),loadPic(IMG.bad)]);
+    ctx.drawImage(u,75,1580,180,180);
+    ctx.drawImage(bad,825,1580,180,180);
+  }catch(e){}
 
-  // IMPORTANT: don't auto-download on iPhone. Show the actual PNG as an image.
+  ctx.fillStyle="#fff0bf"; ctx.font="900 36px sans-serif"; ctx.textAlign="center";
+  ctx.fillText("あんた、ええ手札持ってるやん。",540,1650);
+  ctx.fillStyle="#e8bd61"; ctx.font="900 47px sans-serif";
+  ctx.fillText("ほな、いつ切るん？",540,1715);
+  ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
+  ctx.fillText("UMEKO ORIGINAL CARD DIAGNOSIS",540,1835);
+
+  // iPhone: show the actual PNG and save by long press.
   const png=c.toDataURL("image/png");
   const overlay=document.createElement("div");
   overlay.className="save-preview";
   overlay.innerHTML=`
-    <div class="guide">できたで🤣<br>
+    <div class="guide">うめこ＆悪いうめこ入りで、できたで🤣<br>
     ↓ この画像を <b>長押し</b> →「写真に保存」してな。<br>
     <span style="font-size:.82rem;color:#cbbba5">Safariでメニューが出にくい時は画像を一度タップしてから長押し。</span></div>
     <img src="${png}" alt="人生の手札診断 保存用画像">
