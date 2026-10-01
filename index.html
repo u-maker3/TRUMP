@@ -3,713 +3,420 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#09070a">
-<title>人生の手札診断</title>
+<meta name="theme-color" content="#fff7ef">
+<title>あんた、何屋で売ってくん。｜自分株式会社の商売会議</title>
 <style>
-:root{
-  --bg:#09070a; --panel:#151017; --gold:#e8bd61; --gold2:#fff0b0;
-  --red:#a30f22; --ink:#f8f1e5; --muted:#bdb3a5;
-}
-*{box-sizing:border-box}
-body{
-  margin:0; min-height:100vh; color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
-  background:
-    radial-gradient(circle at 50% 0%,#40101b 0,transparent 34%),
-    radial-gradient(circle at 20% 70%,#211425 0,transparent 34%),
-    linear-gradient(180deg,#080608,#100a0e 55%,#050405);
-}
-.wrap{width:min(980px,100%);margin:auto;padding:24px 16px 64px;text-align:center}
-.hero{padding:26px 10px 10px}
-.kicker{letter-spacing:.24em;color:var(--gold);font-size:.78rem;font-weight:800}
-h1{font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2.2rem,10vw,4.8rem);margin:.18em 0 .08em;color:#fff4ce;text-shadow:0 0 25px #a20f26}
-.lead{margin:0 auto;max-width:620px;color:#ddd0bd;line-height:1.8}
-.quote{margin:18px auto 6px;color:var(--gold2);font-weight:800}
-.btn{
-  border:1px solid #f0ca73;border-radius:999px;padding:14px 24px;
-  background:linear-gradient(180deg,#a9162d,#650815);color:#fff6dc;
-  font-size:1rem;font-weight:900;box-shadow:0 8px 26px #0008, inset 0 0 12px #ffb05d33;
-  cursor:pointer
-}
-.btn.secondary{background:#171117;color:#ead8ae}
-.hidden{display:none!important}
-#intro .mascot{width:min(230px,58vw);height:230px;object-fit:contain;margin:12px auto;display:block}
-.stage{margin-top:22px}
-.instruction{font-weight:900;color:#f8e5b0;margin-bottom:14px}
-.counter{color:var(--gold);margin-bottom:12px;font-weight:800}
-.deck{
-  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;
-  max-width:690px;margin:0 auto
-}
-.pick{
-  aspect-ratio:2/3;border:0;padding:0;border-radius:9px;overflow:hidden;
-  background:#20161b;box-shadow:0 5px 14px #000a;cursor:pointer;
-  transition:.2s transform,.2s filter,.2s opacity
-}
-.pick img{width:100%;height:100%;object-fit:cover;display:block}
-.pick:hover{transform:translateY(-5px)}
-.pick.chosen{filter:brightness(.35);transform:scale(.94);pointer-events:none}
-.pick.chosen:after{content:"✓";position:absolute}
-@media(max-width:620px){.deck{grid-template-columns:repeat(5,1fr);gap:6px}.wrap{padding-inline:10px}}
-.results{margin-top:28px}
-.results h2{font-family:Georgia,"Yu Mincho",serif;color:#ffe5a3;font-size:2rem}
-.hand{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
-@media(max-width:760px){.hand{grid-template-columns:1fr}}
-.result{
-  background:linear-gradient(180deg,#1d151b,#0d0a0c);
-  border:1px solid #6f5530;border-radius:20px;padding:16px;
-  box-shadow:0 12px 32px #0009;position:relative;overflow:hidden
-}
-.slot{color:#d7b96d;font-size:.8rem;font-weight:900;letter-spacing:.12em}
-.face{
-  width:min(190px,70%);aspect-ratio:2/3;margin:12px auto;border-radius:13px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:#f8f2e7;color:#171015;border:5px double #c89a3d;
-  box-shadow:0 7px 18px #0008;position:relative
-}
-.face.red{color:#a40d20}
-.face .rank{font-family:Georgia,serif;font-size:4rem;font-weight:900;line-height:.9}
-.face .suit{font-size:3.4rem;line-height:1}
-.face.joker{padding:0;border:0;background:#000}
-.face.joker img{width:100%;height:100%;object-fit:cover;border-radius:13px}
-.power{color:#d5bc7e;font-size:.85rem;font-weight:900}
-.result h3{font-size:1.35rem;margin:.4em 0;color:#fff0bf}
-.reading{line-height:1.75;color:#eee2d4;text-align:left}
-.use{background:#21151a;border-left:3px solid var(--gold);padding:10px 12px;border-radius:8px;text-align:left;line-height:1.6}
-.bad{margin-top:12px;padding:12px;border-radius:12px;background:#340b13;text-align:left;line-height:1.6}
-.bad b{color:#ffb0b9}
-.summary{
-  margin:20px auto 0;max-width:720px;padding:20px;border:1px solid #9b7437;
-  border-radius:18px;background:#100c0e
-}
-.duo{display:flex;justify-content:center;align-items:end;gap:6px;margin-top:14px}
-.duo img{height:130px;max-width:42%;object-fit:contain}
-.final{font-size:1.25rem;font-weight:900;line-height:1.8}
-.error{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:#ff465f;letter-spacing:.1em;font-weight:900
-}
-footer{margin-top:36px;color:#776f68;font-size:.72rem}
+:root{--ink:#332923;--sub:#75675e;--line:#eadfd4;--pink:#ff6f91;--gold:#e7a53d;--shadow:0 12px 34px rgba(80,53,34,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:radial-gradient(circle at 10% 0,#ffe6ee,transparent 30%),radial-gradient(circle at 90% 8%,#fff0c7,transparent 28%),#fff8ef}
+main{width:min(720px,100%);margin:auto;padding:16px 14px 80px}.hero,.card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow)}.hero{text-align:center;padding:18px}.hero img{width:min(100%,430px);max-height:350px;object-fit:contain}.eyebrow{font-weight:900;color:#a4692b}.hero h1{font-size:clamp(30px,8vw,48px);line-height:1.05;margin:6px 0}.hero p,.small{color:var(--sub);line-height:1.65}.small{font-size:12px}.card{padding:18px;margin-top:14px}.card h2{margin:0 0 10px}label{display:block;font-weight:900;margin:14px 0 6px}.optional{font-size:11px;font-weight:500;color:var(--sub)}input,select{width:100%;font-size:16px;padding:13px;border:1px solid #d9cabe;border-radius:14px;background:#fff}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.notice{font-size:12px;line-height:1.6;padding:11px 12px;border-radius:14px;background:#fff5d9;margin-top:12px}.advanced{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}summary{font-weight:900;cursor:pointer}button{border:0;border-radius:999px;padding:15px 18px;font-size:16px;font-weight:900;cursor:pointer}.primary{width:100%;margin-top:18px;color:#fff;background:linear-gradient(135deg,#ff6f91,#ef9c47);box-shadow:0 8px 22px rgba(239,111,145,.28)}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}
+#result{display:none}.resultHero{text-align:center}.resultHero img{width:min(90%,330px);max-height:270px;object-fit:contain}.pill{display:inline-block;background:#fff0d5;color:#8c5b18;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:900}.type{font-size:27px;font-weight:1000;line-height:1.18;margin:8px 0}.astrogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.astro{padding:10px;border-radius:14px;background:#fff8ef;font-size:13px;font-weight:800}.dept{display:grid;grid-template-columns:82px 1fr;gap:12px;border-top:1px dashed var(--line);padding:14px 0}.dept:first-of-type{border-top:0}.dept img{width:82px;height:82px;object-fit:contain}.dept h3{margin:0 0 4px;font-size:17px}.dept p{margin:0 0 12px;line-height:1.72;font-size:14px}.dept p:last-child{margin-bottom:0}.dept b{color:#9b5f2f}.quote{background:#fff4f7;border-left:5px solid var(--pink);padding:14px;border-radius:14px;line-height:1.7}.order{background:#332923;color:#fff;padding:16px;border-radius:18px;font-weight:900;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1;min-width:130px}.error{display:none;margin-top:12px;padding:12px;border-radius:14px;background:#fff0f0;color:#9a3030;font-weight:700;line-height:1.55}.footer{text-align:center;color:#8c7d72;font-size:11px;line-height:1.65;margin-top:18px}
+@media(max-width:520px){.row{grid-template-columns:1fr}.dept{grid-template-columns:70px 1fr}.dept img{width:70px;height:70px}.astrogrid{grid-template-columns:1fr 1fr}}
 
-/* --- UMEKO upgrade: shuffle / flip / sparkle / save --- */
-.sparkles{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
-.spark{position:absolute;width:5px;height:5px;background:#ffe9a4;transform:rotate(45deg);
-  box-shadow:0 0 8px #fff1a8,0 0 18px #dca52e;animation:twinkle var(--d) ease-in-out infinite}
-@keyframes twinkle{0%,100%{opacity:.05;transform:scale(.35) rotate(45deg)}50%{opacity:1;transform:scale(1.7) rotate(45deg)}}
-.shuffler{max-width:700px;margin:12px auto 22px;padding:18px;border:1px solid #6f5530;border-radius:18px;background:#100b0e}
-.shuffle-zone{height:210px;position:relative;display:grid;place-items:center;perspective:900px}
-.shuffle-card{position:absolute;width:112px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;box-shadow:0 9px 25px #000b;transition:.18s}
-.shuffle-card img{width:100%;height:100%;object-fit:cover}
-.shuffler.go .c1{animation:mix1 1.15s ease-in-out}
-.shuffler.go .c2{animation:mix2 1.15s ease-in-out}
-.shuffler.go .c3{animation:mix3 1.15s ease-in-out}
-.shuffler.go .c4{animation:mix4 1.15s ease-in-out}
-.shuffler.go .c5{animation:mix5 1.15s ease-in-out}
-@keyframes mix1{20%{transform:translate(-115px,-20px) rotate(-18deg)}55%{transform:translate(85px,20px) rotate(12deg)}100%{transform:none}}
-@keyframes mix2{20%{transform:translate(105px,-15px) rotate(16deg)}55%{transform:translate(-80px,28px) rotate(-11deg)}100%{transform:none}}
-@keyframes mix3{25%{transform:translate(-65px,38px) rotate(-9deg)}60%{transform:translate(120px,-22px) rotate(20deg)}100%{transform:none}}
-@keyframes mix4{25%{transform:translate(75px,42px) rotate(10deg)}60%{transform:translate(-120px,-25px) rotate(-20deg)}100%{transform:none}}
-@keyframes mix5{35%{transform:translateY(-45px) rotate(180deg)}75%{transform:translateY(25px) rotate(360deg)}100%{transform:none}}
-.pick{position:relative}
-.pick::before{content:"";position:absolute;inset:-80% -120%;background:linear-gradient(115deg,transparent 42%,#fff8cfdd 49%,transparent 56%);transform:translateX(-60%);transition:.2s;z-index:2}
-.pick:hover::before{animation:cardshine .75s ease}
-@keyframes cardshine{to{transform:translateX(65%)}}
-.reveal-overlay{position:fixed;inset:0;z-index:80;background:#050306eF;display:grid;place-items:center;padding:20px}
-.reveal-card{width:min(330px,78vw);aspect-ratio:2/3;perspective:1200px;filter:drop-shadow(0 0 30px #b11234)}
-.reveal-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:flipwow 1.15s cubic-bezier(.2,.8,.2,1) forwards}
-.reveal-side{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;overflow:hidden;box-shadow:0 0 55px #e7bd5b99}
-.reveal-back img,.reveal-joker img{width:100%;height:100%;object-fit:cover}
-.reveal-front{transform:rotateY(180deg);background:radial-gradient(circle,#fffaf0,#e9dcc4);display:flex;align-items:center;justify-content:center;border:8px double #c99a3c}
-.reveal-front.red{color:#a40d20}.reveal-front.black{color:#111}
-.reveal-front .big{font-family:Georgia,serif;font-size:clamp(5rem,25vw,8rem);font-weight:900;line-height:.8}
-.reveal-front .bigSuit{font-size:clamp(4rem,20vw,7rem);line-height:1}
-@keyframes flipwow{0%{transform:rotateY(0) scale(.75)}45%{transform:rotateY(540deg) scale(1.08)}100%{transform:rotateY(900deg) scale(1)}}
-.flash{position:fixed;inset:0;z-index:79;pointer-events:none;background:radial-gradient(circle,#fff9d8 0,#d9a63088 15%,transparent 50%);animation:flash .9s ease forwards}
-@keyframes flash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
-.result{animation:rise .6s ease both}
-.result:nth-child(2){animation-delay:.12s}.result:nth-child(3){animation-delay:.24s}
-@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
-.result::after{content:"";position:absolute;top:-70%;left:-120%;width:80%;height:240%;background:linear-gradient(100deg,transparent,#fff2a72b,transparent);transform:rotate(15deg);animation:sweep 4s ease-in-out infinite}
-@keyframes sweep{0%,55%{left:-120%}85%,100%{left:160%}}
-.action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
-.save-note{font-size:.75rem;color:#aa9d8b;margin-top:8px}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
-
-/* v3 */
-.floating-mascot{position:fixed;z-index:45;top:calc(72px + env(safe-area-inset-top));width:clamp(70px,17vw,135px);pointer-events:none;
- filter:drop-shadow(0 8px 14px #0009)}
-.float-normal{left:2px;animation:bobA 2.4s ease-in-out infinite}
-.float-bad{right:2px;animation:bobB 2s ease-in-out infinite}
-@keyframes bobA{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-15px) rotate(4deg)}}
-@keyframes bobB{0%,100%{transform:translateY(-5px) rotate(4deg)}50%{transform:translateY(-22px) rotate(-5deg)}}
-.shuffler.loop .c1{animation:mix1 .75s ease-in-out infinite}
-.shuffler.loop .c2{animation:mix2 .68s ease-in-out infinite}
-.shuffler.loop .c3{animation:mix3 .82s ease-in-out infinite}
-.shuffler.loop .c4{animation:mix4 .72s ease-in-out infinite}
-.shuffler.loop .c5{animation:mix5 .9s ease-in-out infinite}
-.stopbtn{background:linear-gradient(180deg,#d6aa43,#80601d);color:#160e08}
-.save-card{margin:16px auto 0;max-width:720px;background:linear-gradient(180deg,#21141a,#0b080a);
- border:2px solid #a77d38;border-radius:22px;padding:22px 14px;box-shadow:0 0 30px #b7862c22}
-.save-title{font-family:Georgia,"Yu Mincho",serif;color:#fff0bd;font-size:1.9rem;font-weight:900}
-.save-sub{color:#d4bc7d;margin:5px 0 16px;font-weight:800}
-.save-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.save-mini{border:1px solid #72562f;border-radius:14px;padding:12px 7px;background:#130e11;min-width:0}
-.save-mini .cardcode{font:900 2.1rem Georgia,serif;color:#fff0c0}
-.save-mini .cardcode.red{color:#ff6575}
-.save-mini h4{margin:8px 0;color:#fff0bd;font-size:1rem}
-.save-mini p{margin:6px 0;line-height:1.45;font-size:.8rem;color:#e8ddd0}
-.save-mini .devil{color:#ffabb5}
-@media(max-width:520px){.save-grid{grid-template-columns:1fr}.save-mini p{font-size:.9rem}}
-
-.save-preview{
-  position:fixed; inset:0; z-index:120; background:#050306f2;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
-  padding:calc(18px + env(safe-area-inset-top)) 14px 30px; overflow:auto;
-}
-.save-preview img{
-  display:block; width:min(92vw,720px); height:auto; margin:10px auto;
-  border-radius:18px; border:2px solid #b78a3f;
-  box-shadow:0 0 38px #d2a64655;
-  -webkit-touch-callout:default; user-select:auto;
-}
-.save-preview .guide{
-  max-width:720px; color:#fff0c0; font-weight:900; line-height:1.7;
-}
-.save-preview .closePreview{margin:8px 0 18px}
-
-.deepread{margin-top:12px;text-align:left;display:grid;gap:8px}
-.deepbox{padding:10px 12px;border-radius:10px;background:#171116;border:1px solid #4f3d2b;line-height:1.65}
-.deepbox b{color:#e5c678}
-.deepbox.warn{background:#211015;border-color:#6b3039}
-.deepbox.warn b{color:#ff9fac}
-
-.combo-reading{margin:20px auto 0;max-width:760px;padding:22px 16px;border-radius:20px;
- background:radial-gradient(circle at 50% 0,#38121c,#100b0e 58%);
- border:1px solid #b78a3f;box-shadow:0 0 30px #b7862c22;text-align:left}
-.combo-reading h3{text-align:center;color:#fff0bd;font:900 1.65rem Georgia,"Yu Mincho",serif;margin:0 0 6px}
-.combo-tag{text-align:center;color:#d8b85e;font-weight:900;margin-bottom:15px}
-.combo-reading p{line-height:1.8;color:#eee1d1}
-.combo-punch{margin-top:14px;padding:13px;border-radius:12px;background:#330b13;color:#ffd9dd;font-weight:800;line-height:1.7}
-
-.namebox{max-width:430px;margin:18px auto 12px}
-.namebox input{width:100%;padding:14px 16px;border-radius:999px;border:1px solid #9b7437;
- background:#120c10;color:#fff0c0;text-align:center;font-size:1rem;outline:none;box-shadow:inset 0 0 12px #0008}
-.namebox input:focus{border-color:#f0ca73;box-shadow:0 0 18px #d39c3b44}
-.namehint{font-size:.72rem;color:#8f8377;margin-top:6px}
+.reportBook h3{margin:22px 0 6px}.reportBook p{line-height:1.85}.licensePreview{width:100%;border-radius:18px;border:1px solid var(--line);margin-top:12px;-webkit-touch-callout:default}
+@media print{body{background:#fff}.hero,#formCard,.actions,.footer,.card:not(.reportBook){display:none!important}main{width:100%;padding:0}.reportBook{display:block!important;box-shadow:none;border:0;padding:15mm}.reportBook h3{page-break-after:avoid}.reportBook p{line-height:1.8}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 </head>
-<body><div class="sparkles" id="sparkles"></div>
-<img class="floating-mascot float-normal" src="umeko.PNG" alt="">
-<img class="floating-mascot float-bad" src="bad_umeko.PNG" alt="">
-<main class="wrap">
-<section id="intro" class="hero">
-  <div class="kicker">UMEKO ORIGINAL CARD DIAGNOSIS</div>
-  <h1>人生の手札診断</h1>
-  <p class="lead"><b style="color:#ffe6a4;font-size:1.15em">たかがトランプ。<br>されど、妙に刺さる。</b><br><br>
-  54枚から直感で3枚。<br>
-  あんたが持ってる札、腐らせてる札、ここぞの切り札を見てみよか。<br><br>
-  <b>信じるも信じんも自由。<br>使えそうな札だけ持って帰って。</b></p>
-  <img class="mascot" src="umeko.PNG" alt="うめこ">
-  <div class="quote">配られたカードは変えられへん。<br>でも、切り方はあんた次第。</div>
-  <div class="namebox">
-    <input id="userName" type="text" maxlength="20" placeholder="名前を入れてな（例：うめこ）" autocomplete="off">
-    <div class="namehint">入力した名前は保存しません。</div>
-  </div>
-  <button class="btn" id="start">手札を配ってもらう</button>
+<body><main>
+<section class="hero">
+<img src="./TOP.PNG" alt="自分株式会社の商売会議">
+<div class="eyebrow">星から読む、自分株式会社の商売会議</div>
+<h1>あんた、<br>何屋で売ってくん。</h1>
+<p>生年月日から6天体を自動計算。出生時刻＋出生地が分かればMCまで会議します。</p>
+<div class="notice">日本生まれ（JST）向け。出生時刻が不明でも、同じ日の中で星座が変わらない天体は自動判定します。時刻によって星座が変わる場合は、勝手に決めず診断を止めます。</div>
 </section>
 
-<section id="game" class="stage hidden">
-  <div class="shuffler" id="shuffler">
-    <div class="instruction">まずは54枚、派手に混ぜます。</div>
-    <div class="shuffle-zone">
-      <div class="shuffle-card c1"><img src="card_back.PNG"></div>
-      <div class="shuffle-card c2"><img src="card_back.PNG"></div>
-      <div class="shuffle-card c3"><img src="card_back.PNG"></div>
-      <div class="shuffle-card c4"><img src="card_back.PNG"></div>
-      <div class="shuffle-card c5"><img src="card_back.PNG"></div>
-    </div>
-    <button class="btn" id="shuffleBtn">🃏 シャッフル開始</button>
-    <button class="btn stopbtn hidden" id="stopShuffle">ここや！ストップ</button>
-    <div id="shuffleMsg" style="margin-top:10px;color:#d7bd7c;font-weight:800">好きなだけ混ぜてな。</div>
-  </div>
-  <div id="pickArea" class="hidden">
-    <div class="instruction">考えすぎ禁止。直感で3枚選んでな。</div>
-    <div class="counter" id="counter">0 / 3 枚</div>
-    <div class="deck" id="deck"></div>
-  </div>
+<section class="card" id="formCard">
+<h2>🏢 自分株式会社を設立</h2>
+<label>社長名 <span class="optional">ニックネームでOK／空欄可</span></label>
+<input id="name" maxlength="20" placeholder="例：うめこ">
+<label>生年月日</label>
+<input id="birthdate" type="date">
+<label>出生時刻 <span class="optional">分かる人だけ。分からんかったら空欄。</span></label>
+<input id="birthtime" type="time">
+
+<details class="advanced">
+<summary>MC（世間の看板部）も出したい人</summary>
+<p class="small">MCは出生時刻と出生地が分かる人だけ。都道府県→市区町村を選ぶだけでOK。分からない場合は空欄で6部署版にします。</p>
+<label>出生地の都道府県</label>
+<select id="pref"><option value="">選んでな</option></select>
+<label>出生地の市区町村</label>
+<select id="city" disabled><option value="">先に都道府県を選んでな</option></select>
+<p class="small">市区町村の代表座標を使います。出生地の細かな住所入力は不要です。</p>
+</details>
+
+<div class="error" id="error"></div>
+<button class="primary" id="diagnose">星を計算して商売会議する 🐾</button>
+<p class="small">入力内容はこのページ内の計算だけに使用し、localStorage等には保存しません。</p>
 </section>
 
-<section id="results" class="results hidden">
-  <div class="kicker">YOUR HAND</div>
-  <h2 id="resultTitle">人生の手札</h2>
-  <div class="hand" id="hand"></div>
-  <div class="combo-reading" id="comboReading"></div><div class="summary" id="summary"></div>
-  <div id="saveCard" class="save-card"></div><div class="action-row">
-    <button class="btn" id="saveResult">保存用画像を作る</button>
-    <button class="btn secondary" id="again">もう一回、配り直す</button>
-  </div>
-  <div class="save-note">iPhone対応：画像を作ったら、表示された画像を長押し →「写真に保存」してな。</div>
+<section id="result">
+<div class="card resultHero">
+<img src="./RESULT.PNG" alt="決裁">
+<div class="pill" id="mode"></div>
+<div class="type" id="type"></div>
+<p id="summary"></p>
+
+</div>
+<div class="card"><h2>📋 各部署から報告</h2><div id="departments"></div></div>
+<div class="card">
+<h2>🗣️ 本日の社内会議</h2><div class="quote" id="meeting"></div>
+<h2>🚫 やらんでええこと</h2><p id="dont"></p>
+<h2>📌 本日の営業命令</h2><div class="order" id="order"></div>
+<h2>🐱 うめこ一言</h2><p id="umeko"></p>
+</div>
+<div class="card reportBook">
+<h2>📖 自分株式会社・商売鑑定書</h2>
+<div class="quote"><b>【総合所見】</b><br><span id="overall"></span></div>
+<h3>🏪 商売の核</h3><p id="reportCore"></p>
+<h3>🤝 お客さんとの関係</h3><p id="reportCustomer"></p>
+<h3>📣 伝え方・発信</h3><p id="reportMessage"></p>
+<h3>🎨 世界観・見せ方</h3><p id="reportBrand"></p>
+<h3>🔥 行動・営業</h3><p id="reportAction"></p>
+<h3>🌱 育てる方向</h3><p id="reportGrowth"></p>
+<h3>🏢 社会に掲げる看板</h3><p id="reportPublic"></p>
+<h3>⚠️ 商売で詰まりやすいところ</h3><p id="reportRisk"></p>
+<h3>🧭 これからの商売方針</h3><p id="reportPolicy"></p>
+<div class="order"><b>最終決裁</b><br><span id="finalDecision"></span></div>
+<p class="small">↓ A4鑑定書を3枚作るで。できた画像はそれぞれ長押し →「写真に保存」。</p>
+<div id="reportPages">
+<img id="reportPage1" class="licensePreview" alt="商売鑑定書 1ページ目">
+<img id="reportPage2" class="licensePreview" alt="商売鑑定書 2ページ目" style="display:none">
+<img id="reportPage3" class="licensePreview" alt="商売鑑定書 3ページ目" style="display:none">
+</div>
+</div>
+<div class="card">
+<h2>🪪 商売・営業許可証</h2>
+<img src="./LICENSE.PNG" alt="営業許可証" style="width:100%;max-height:260px;object-fit:contain">
+<p class="small">下の営業許可証を長押し →「写真に保存」でOK。</p><img id="licensePreview" class="licensePreview" alt="商売・営業許可証"><div class="actions"><button class="secondary" id="printReport">A4鑑定書を3枚作る</button><button class="secondary" id="retry">もう一回会議する</button></div>
+</div>
 </section>
-<footer>※遊びとして楽しむオリジナル診断です。結果は人生の決定を代わりにするものではありません。</footer>
+<div class="footer">占星術の象徴を使った娯楽・自己分析コンテンツです。売上・成功・適職を保証するものではありません。<br>
+天体計算：Astronomy Engine 2.1.19 (MIT License, © 2019–2025 Don Cross)。<br>
+市区町村データ：code4fukui/localgovjp (CC0)。入力した生年月日・時刻・出生地を外部送信する処理はありません。<br>鑑定書画像：UMEKO_REPORT.PNG</div>
 </main>
-
 <script>
-const IMG={
-  normal:"umeko.PNG", bad:"bad_umeko.PNG", back:"card_back.PNG",
-  redJoker:"red_joker.PNG", blackJoker:"black_joker.PNG"
+
+"use strict";
+let municipalities=[];
+(async function loadMunicipalities(){
+ try{
+  const r=await fetch("https://code4fukui.github.io/localgovjp/localgovjp.json",{cache:"force-cache"});
+  if(!r.ok) throw new Error("municipality data");
+  municipalities=await r.json();
+  const prefs=[...new Set(municipalities.map(x=>x.pref))];
+  const ps=document.getElementById("pref");
+  prefs.forEach(pref=>{const o=document.createElement("option");o.value=o.textContent=pref;ps.appendChild(o)});
+ }catch(e){
+  const er=document.getElementById("error");
+  er.innerHTML="出生地データを読み込めませんでした。MCなしの6部署診断はそのまま使えます。";
+  er.style.display="block";
+ }
+})();
+document.getElementById("pref").addEventListener("change",function(){
+ const cs=document.getElementById("city"); cs.innerHTML='<option value="">選んでな</option>';
+ municipalities.filter(x=>x.pref===this.value).forEach(x=>{
+  const o=document.createElement("option");o.value=x.city;o.textContent=x.city;
+  o.dataset.lat=x.lat;o.dataset.lng=x.lng;cs.appendChild(o);
+ });
+ cs.disabled=!this.value;
+});
+
+const signs=["牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"];
+const core={
+"牡羊座":{k:"先陣",v:"新しいことを先に始める",tone:"結論から速く",look:"主役をひとつドン",act:"まず動いて直す",grow:"新企画から広げる",social:"先陣を切る人"},
+"牡牛座":{k:"品質",v:"手触りのある価値をじっくり育てる",tone:"具体的に、体感で",look:"質感と心地よさ",act:"決めたことを粘り強く",grow:"既存の価値を厚くする",social:"ちゃんとしている人"},
+"双子座":{k:"情報",v:"知ったことを軽やかにつなぐ",tone:"短く、分かりやすく、数多く",look:"軽快で変化のある見せ方",act:"試して会話して切り替える",grow:"媒体や入口を複数持つ",social:"情報が集まる人"},
+"蟹座":{k:"安心",v:"人が戻ってこられる居場所を育てる",tone:"身近な言葉で気持ちに寄り添う",look:"親しみと温度",act:"大事な人を守るために動く",grow:"常連と口コミを育てる",social:"面倒見のいい人"},
+"獅子座":{k:"表現",v:"自分らしい表現を堂々と見せる",tone:"自信を持って物語る",look:"華やかに主役を作る",act:"舞台に立って引っ張る",grow:"作品・ブランドを大きく見せる",social:"あの人と言えば、がある人"},
+"乙女座":{k:"改善",v:"役に立つ形へ整えて届ける",tone:"順序立てて具体的に",look:"清潔・整理・機能美",act:"小さく検証して改善する",grow:"仕組みと品質管理で広げる",social:"細部まで任せられる人"},
+"天秤座":{k:"調和",v:"人と人、価値と価値を美しくつなぐ",tone:"相手目線でスマートに",look:"洗練とバランス",act:"比較し、良い落とし所を作る",grow:"コラボと紹介で広げる",social:"センスよく橋渡しする人"},
+"蠍座":{k:"深掘り",v:"表面で終わらず核心まで扱う",tone:"少数に深く刺す",look:"濃さと秘密めいた余白",act:"決めた対象へ集中する",grow:"専門性と濃い信頼を深める",social:"その道を深く知る人"},
+"射手座":{k:"探究",v:"学びと経験を遠くまで運ぶ",tone:"大きな視点で面白く",look:"自由さと旅する空気",act:"外へ出て試す",grow:"学び・発信・遠方へ広げる",social:"世界を広げてくれる人"},
+"山羊座":{k:"実績",v:"積み上げを形と信用に変える",tone:"根拠と結果を端的に",look:"信頼感と骨格",act:"計画して続ける",grow:"仕組み化し長期で育てる",social:"任せても崩れない人"},
+"水瓶座":{k:"独自",v:"当たり前を外して新しい仕組みを作る",tone:"独自の視点をフラットに",look:"未来感と意外性",act:"古い前提を疑って試す",grow:"ネットワークと技術で広げる",social:"他と違う発想の人"},
+"魚座":{k:"感性",v:"言葉にならない気持ちを形にする",tone:"イメージと共感で伝える",look:"やわらかい世界観と物語",act:"流れを感じて柔軟に動く",grow:"共感・創作・癒やしを広げる",social:"感覚をすくい上げる人"}
 };
-const suitInfo={
-  "♥":{key:"heart",power:"惹きつける力",color:"red"},
-  "♦":{key:"diamond",power:"価値にする力",color:"red"},
-  "♣":{key:"club",power:"動かす力",color:"black"},
-  "♠":{key:"spade",power:"見抜く力",color:"black"}
-};
-const data={
-"♥":[
-["A","始める","縁の火付け役","初対面でも自然に関係を始められる。","新しい出会いや、止まっている人間関係を動かしたい時。","待ってても誰も玄関まで来ぇへんで"],
-["2","つなぐ","ご縁の接着剤","人と人を結びつけるのが得意。","人同士を紹介したり、チームの橋渡しをする時。","何でもくっつけたらええ訳ちゃう"],
-["3","広げる","愛嬌拡散機","楽しさを周囲へ広げ、人を集める。","場を明るくしたい時や、仲間を増やしたい時。","喋りすぎて本題どっか行ってるで"],
-["4","固める","安心基地","信頼関係をじっくり築ける。","長く続く関係や居場所を作る時。","居心地よすぎて便利屋になるな"],
-["5","変える","空気チェンジャー","場の空気や人の気持ちを切り替える。","重たい空気を変えたい時や、新風を入れたい時。","空気読みすぎて自分まで変身すな"],
-["6","育てる","愛情育成係","人の良さを見つけて伸ばせる。","誰かを支えたり、関係を育てる時。","世話焼きとお節介は隣同士や"],
-["7","掘る","本音発掘人","表面ではなく心の奥に触れられる。","本音を知りたい時や、深い対話が必要な時。","聞いてない秘密まで掘るな"],
-["8","動かす","巻き込み磁石","人の心を動かして行動につなげる。","一人では動かない企画を前へ進める時。","全員連れて行こうとすな"],
-["9","極める","愛され職人","人との関係を深く成熟させられる。","大切な縁を長く育てたい時。","好かれる努力まで始めたら迷子や"],
-["10","完成させる","ご縁の仕上げ人","バラバラな人間関係を一つにまとめる。","チームや集まりを一つに着地させる時。","最後の尻拭いまで担当せんでええ"],
-["J","攻める","懐突入型","距離を縮める度胸と瞬発力がある。","初対面や勝負どころで一気に距離を縮める時。","土足で入ったらただの不審者や"],
-["Q","魅せる","天然人たらし","存在感や愛嬌そのものが魅力になる。","自分自身を前に出したい時。","全員に好かれようとしたら勤務時間24時間や"],
-["K","率いる","人心掌握役","信頼によって人をまとめられる。","人の気持ちを大事にしながら先頭に立つ時。","王様ちゃう。ちゃんと人の話聞け"]
-],
-"♦":[
-["A","始める","ゼロイチ錬金術師","何もないところから価値の種を生み出す。","新商品、新企画、新しい仕事を始める時。","思いついた瞬間だけ社長になるな"],
-["2","つなぐ","価値の仲人","別々のものを組み合わせ、新しい価値を作る。","異なる得意や素材を掛け合わせる時。","何でもコラボしたらええ訳ちゃう"],
-["3","広げる","才能拡声器","良いものを見つけ、魅力が伝わる形に広げる。","発信、紹介、PRで価値を届ける時。","宣伝する前に中身確認したか"],
-["4","固める","土台職人","アイデアを安定して続く形にできる。","仕組みや基盤を整える時。","固めすぎて化石にすな"],
-["5","変える","価値変換機","一見ムダなものにも別の使い道を見つける。","行き詰まったものを別角度から活かす時。","何でも『使える』で捨てへんから家パンパンや"],
-["6","育てる","才能育成家","小さな可能性を時間をかけて価値に変える。","未完成の才能や企画を育てる時。","芽ぇ出てない鉢に水3リットルやるな"],
-["7","掘る","お宝発掘人","人が見逃す価値や才能を見つけ出す。","埋もれた強みや素材を探す時。","掘りすぎて別の趣味始めてるで"],
-["8","動かす","価値の実行屋","才能やアイデアを実際の成果へ動かせる。","考えていたものを現実に出す時。","思いついた翌日に販売開始すな"],
-["9","極める","一芸錬成師","得意分野を磨き、代わりのない価値にできる。","一つの技術や専門性を磨く時。","極める前に次のん見つけんな"],
-["10","完成させる","商品化職人","アイデアを人に渡せる完成形まで仕上げる。","作品やサービスを世に出せる形にする時。","完成したのにまた改装始めるな"],
-["J","攻める","チャンス強奪型","好機を見つけたら素早く価値へ変えられる。","チャンスが来た瞬間に掴みに行く時。","チャンスちゃう。ただの思いつきの時あるで"],
-["Q","魅せる","価値プロデューサー","魅力を見せ方まで含めて価値にできる。","ブランディングや見せ方を整える時。","包装紙だけ高級にすなよ"],
-["K","率いる","価値創造王","人・才能・資源をまとめ、大きな価値へ育てる。","複数の力を束ねて事業や企画を動かす時。","王国作る前に帳簿つけろ"]
-],
-"♣":[
-["A","始める","先陣スターター","誰も動いていないところから最初の一歩を踏み出せる。","誰かが始めるのを待っている場面。","『とりあえず』で始めた案件、何個ある？"],
-["2","つなぐ","タッグメーカー","人と力を組み合わせ、一緒に動き出せる。","一人より誰かと組んだ方が速い時。","相方決める前に本人に聞け"],
-["3","広げる","行動伝染人","自分が動くことで周囲まで動かしていく。","周りの温度を上げたい時。","一人で始めたのに何でイベントになってんねん"],
-["4","固める","継続エンジン","始めたことを習慣にして積み上げられる。","毎日の積み重ねが結果になる時。","ルーティン増やしすぎて自分を雇うな"],
-["5","変える","方向転換の達人","状況を見ながら素早くやり方を変えられる。","予定通り進まない時。","『改良です』言うて別物にすな"],
-["6","育てる","成長ブースター","動きながら改善し、小さな成果を大きく育てる。","まず動いて、後から育てる時。","育つ前に新しい苗買うてくんな"],
-["7","掘る","攻略探究者","試して検証して、自分なりの攻略法を見つける。","試行錯誤が必要な課題に向き合う時。","調べ始めて3時間。最初何するんやった？"],
-["8","動かす","爆走エンジン","決めた瞬間、一気に現実を動かす推進力がある。","停滞をぶち破って前進したい時。","速い。とにかく一回止まれ。"],
-["9","極める","実践マスター","経験を重ねるほど技術と行動精度が上がる。","頭より実践で腕を磨く時。","回数こなしただけで師匠名乗んな"],
-["10","完成させる","完遂ランナー","スタートからゴールまで走り切る力を持つ。","最後までやり抜く必要がある時。","ゴールした瞬間、次のスタート切るな"],
-["J","攻める","突破特攻隊","壁があっても恐れず前へ出て道を開く。","誰も突破口を見つけられない時。","扉や。壁ちゃう。まずノブ回せ"],
-["Q","魅せる","ムーブメントメーカー","楽しそうに動く姿そのものが人を巻き込む。","人を誘い、流れを作りたい時。","楽しそうすぎて何してる人か分からん"],
-["K","率いる","進軍リーダー","方向を示し、人を率いて物事を前進させる。","みんなで一つのゴールへ進む時。","全員ついて来てると思うな。後ろ見ろ"]
-],
-"♠":[
-["A","始める","真実の一閃","最初の違和感から、本質への入口を見つける。","何かがおかしいと感じた時。","その『なんか変』、だいたい後で当たるやつ"],
-["2","つなぐ","点と点の観測者","バラバラな情報から隠れたつながりを見つける。","情報が散らばって答えが見えない時。","伏線回収しすぎて勝手にドラマ作るな"],
-["3","広げる","視界拡張者","一方向だけでなく、複数の視点から物事を捉える。","別の見方が必要な時。","見えすぎて話ややこししてんの自分やで"],
-["4","固める","静かな参謀","情報を整理し、ブレない判断軸を作れる。","感情に流されず判断したい時。","会議終わってから正解言うな"],
-["5","変える","違和感破壊者","『当たり前』を疑い、より良い答えへ切り替えられる。","古いやり方を見直す時。","何でも疑ったら説明書まで敵になるで"],
-["6","育てる","知恵の錬成師","経験から学びを抽出し、次の判断に活かせる。","失敗や経験を次へつなげる時。","黒歴史まで教材にすな"],
-["7","掘る","深層ダイバー","表面では満足せず、物事の奥にある理由まで探れる。","原因や本音を深く知る必要がある時。","深いねん。もう海底や。帰ってこい"],
-["8","動かす","一手先の策士","状況を読み、最も効果的な一手を選んで動ける。","無駄打ちせず一手を選びたい時。","読みすぎて相手まだ何もしてへん"],
-["9","極める","本質鑑定人","経験と洞察を重ね、余計なものに惑わされなくなる。","情報が多すぎる中で核心を見たい時。","一発で見抜いても、顔に出すな"],
-["10","完成させる","答えを出す人","複雑な状況を整理し、最後に一つの結論へ導ける。","考え続ける段階を終えて決める時。","答え出すん早いねん。みんなまだ説明中や"],
-["J","攻める","矛盾狩り","おかしな点を恐れず突き、突破口を見つける。","矛盾や問題を曖昧にできない時。","正論という名の鈍器を置け"],
-["Q","魅せる","静謐のカリスマ","多くを語らずとも、洞察と存在感で人を惹きつける。","言葉を重ねず存在感で示したい時。","黙ってたら全部分かってる風に見える。得やな"],
-["K","率いる","盤上の支配者","全体を俯瞰し、先を読みながら最善の方向へ導く。","複雑な状況全体を見て舵を取る時。","全部読めても、人間は予定通り動かんで。"]
-]};
-const jokerData=[
- {id:"RJ",name:"RED JOKER",title:"予定調和破壊者",power:"分類：知らん。枠に入らん。",reading:"決められた道を上手に歩くより、道そのものを作り替える力を持つ札。人と同じやり方では力が出にくく、「そんなやり方アリなん？」から結果を作る。",use:"行き詰まった時。常識通りにやっても面白くない時。ゼロから何か生み出す時。",bad:"普通になろうとしてたん？ 無理やで。",img:IMG.redJoker},
- {id:"BJ",name:"BLACK JOKER",title:"大逆転者",power:"分類：土壇場専門。",reading:"順調な時より「もうアカン」から異様に強い札。想定外・失敗・予定変更すら材料にして、最後にひっくり返す力を持つ。",use:"計画が崩れた時。選択肢がなくなった時。「もうこれしかない」になった時。",bad:"最初から本気出せ。毎回崖っぷち待つな。",img:IMG.blackJoker}
+const depts=[
+{id:"sun",label:"☀️ 太陽／看板商品部",img:"SUN.PNG",field:"v",lead:"看板の核"},
+{id:"moon",label:"🌙 月／また来たなる部",img:"MOON.PNG",field:"v",lead:"安心の理由"},
+{id:"mercury",label:"☿ 水星／売り文句部",img:"MERCURY.PNG",field:"tone",lead:"伝え方"},
+{id:"venus",label:"♀ 金星／店構え部",img:"VENUS.PNG",field:"look",lead:"魅せ方"},
+{id:"mars",label:"♂ 火星／営業部",img:"MARS.PNG",field:"act",lead:"動き方"},
+{id:"jupiter",label:"♃ 木星／事業拡張部",img:"JUPITER.PNG",field:"grow",lead:"育て方"},
+{id:"mc",label:"MC／世間の看板部",img:"MC.PNG",field:"social",lead:"外からの看板",optional:true}
 ];
 
-let playerName="あんた";
-function displayName(){return playerName || "あんた";}
-let cards=[];
-for(const suit of Object.keys(data)){
-  data[suit].forEach(x=>cards.push({
-    id:suit+x[0], suit, rank:x[0], action:x[1], title:x[2],
-    reading:x[3], use:x[4], bad:x[5], power:suitInfo[suit].power
-  }));
+const bodyMap={sun:Astronomy.Body.Sun,moon:Astronomy.Body.Moon,mercury:Astronomy.Body.Mercury,venus:Astronomy.Body.Venus,mars:Astronomy.Body.Mars,jupiter:Astronomy.Body.Jupiter};
+const glyph={sun:"☀️",moon:"🌙",mercury:"☿",venus:"♀",mars:"♂",jupiter:"♃",mc:"MC"};
+function norm(x){return ((x%360)+360)%360}
+function signOf(lon){return signs[Math.floor(norm(lon)/30)]}
+function geoLongitude(body,date){
+ const vec=Astronomy.GeoVector(body,date,true);
+ return norm(Astronomy.Ecliptic(vec).elon);
 }
-cards.push(...jokerData);
-let shuffled=[],selected=[];
+function calcSix(date){
+ const out={};
+ for(const k of ["sun","moon","mercury","venus","mars","jupiter"]) out[k]={lon:geoLongitude(bodyMap[k],date)};
+ return out;
+}
+function jstDate(dateStr,timeStr){
+ const [y,m,d]=dateStr.split("-").map(Number);
+ const [hh,mm]=(timeStr||"12:00").split(":").map(Number);
+ return new Date(Date.UTC(y,m-1,d,hh-9,mm,0));
+}
+function calcMC(date,latitude,longitude){
+ // Midheaven = ecliptic longitude whose right ascension equals local sidereal time.
+ // East longitude is positive. Latitude is not part of the MC formula.
+ const lstDeg=norm(Astronomy.SiderealTime(date)*15 + longitude);
+ const theta=lstDeg*Math.PI/180;
 
-const $=s=>document.querySelector(s);
-function shuffle(a){
-  a=[...a];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
-  return a;
-}
-function deal(){
-  selected=[]; shuffled=shuffle(cards);
-  $("#results").classList.add("hidden"); $("#game").classList.remove("hidden");
-  $("#pickArea").classList.add("hidden"); $("#shuffler").classList.remove("hidden","go","loop");
-  $("#shuffleBtn").classList.remove("hidden"); $("#stopShuffle").classList.add("hidden");
-  $("#shuffleMsg").textContent="好きなだけ混ぜてな。"; if(shuffleTimer){clearInterval(shuffleTimer);shuffleTimer=null;}
-  $("#counter").textContent="0 / 3 枚";
-  const deck=$("#deck"); deck.innerHTML="";
-  shuffled.forEach((card,i)=>{
-    const b=document.createElement("button");
-    b.className="pick"; b.setAttribute("aria-label",`${i+1}枚目のカード`);
-    b.innerHTML=`<img src="${IMG.back}" alt="伏せたカード">`;
-    b.onclick=()=>{
-      if(selected.length>=3 || b.classList.contains("chosen")) return;
-      b.classList.add("chosen"); selected.push(card);
-      $("#counter").textContent=`${selected.length} / 3 枚`;
-      revealCard(card, selected.length, ()=>{ if(selected.length===3) setTimeout(showResults,220); });
-    };
-    deck.appendChild(b);
-  });
-}
-function face(c){
-  if(c.id==="RJ"||c.id==="BJ") return `<div class="face joker"><img src="${c.img}" alt="${c.name}"></div>`;
-  const cls=suitInfo[c.suit].color==="red"?" red":"";
-  return `<div class="face${cls}"><div class="rank">${c.rank}</div><div class="suit">${c.suit}</div></div>`;
-}
+ // Mean obliquity (IAU/Meeus polynomial; sufficient here and avoids private library APIs).
+ const jd=date.getTime()/86400000 + 2440587.5;
+ const T=(jd-2451545.0)/36525.0;
+ const epsDeg=23 + 26/60 + (21.448 - 46.8150*T - 0.00059*T*T + 0.001813*T*T*T)/3600;
+ const eps=epsDeg*Math.PI/180;
 
-function burstSparkles(){
-  const flash=document.createElement("div"); flash.className="flash"; document.body.appendChild(flash);
-  setTimeout(()=>flash.remove(),950);
+ // atan2 form preserves the correct quadrant:
+ // tan(lambda) = tan(theta) / cos(epsilon)
+ return norm(Math.atan2(Math.sin(theta), Math.cos(theta)*Math.cos(eps))*180/Math.PI);
 }
-function revealCard(c,n,done){
-  burstSparkles();
-  const o=document.createElement("div"); o.className="reveal-overlay";
-  let front;
-  if(c.id==="RJ"||c.id==="BJ"){
-    front=`<div class="reveal-side reveal-front reveal-joker"><img src="${c.img}" alt="${c.name}"></div>`;
-  }else{
-    const col=suitInfo[c.suit].color;
-    front=`<div class="reveal-side reveal-front ${col}"><div><div class="big">${c.rank}</div><div class="bigSuit">${c.suit}</div></div></div>`;
-  }
-  o.innerHTML=`<div><div class="slot" style="margin-bottom:12px">${n}枚目</div><div class="reveal-card"><div class="reveal-inner"><div class="reveal-side reveal-back"><img src="${IMG.back}"></div>${front}</div></div><div style="margin-top:18px;color:#ffe6a4;font-weight:900">めくったで。</div></div>`;
-  document.body.appendChild(o);
-  setTimeout(()=>{o.style.transition=".3s";o.style.opacity="0";setTimeout(()=>{o.remove();done&&done()},300)},1550);
+function degMinWithinSign(lon){
+ let d=norm(lon)%30, deg=Math.floor(d), min=Math.round((d-deg)*60);
+ if(min===60){deg+=1;min=0}
+ if(deg===30){deg=0}
+ return `${deg}°${String(min).padStart(2,"0")}′`;
 }
-function makeSparkles(){
-  const box=$("#sparkles");
-  for(let i=0;i<30;i++){
-    const x=document.createElement("i"); x.className="spark";
-    x.style.left=Math.random()*100+"%"; x.style.top=Math.random()*100+"%";
-    x.style.setProperty("--d",(1.4+Math.random()*3)+"s");
-    x.style.animationDelay=(-Math.random()*3)+"s";
-    box.appendChild(x);
-  }
-}
-makeSparkles();
-
-
-const powerExtra={
- "♥":{
-   core:"人との間に温度を生む札。あんた自身の人柄や共感力が、相手の警戒心をほどく武器になる。",
-   shine:"人と関わるほど強くなる。紹介・接客・発信・チームづくりでは、数字に出にくい『また会いたい』を作れる。",
-   shadow:"相手を優先しすぎると、自分の本音が行方不明になる。好かれることと、合わせ続けることは別モンや。"
- },
- "♦":{
-   core:"『これ、何かに使えへん？』を価値へ変える札。才能・素材・経験を、人に届く形へ編集する武器。",
-   shine:"企画、商品化、見せ方、価格づけなど、ぼんやりした良さを『欲しい』に変える場面で強い。",
-   shadow:"価値を作ることに夢中になると、完成前に次のアイデアへ飛びがち。作るだけやなく、届け切って完成や。"
- },
- "♣":{
-   core:"考えて終わらず、現実を一歩動かす札。行動そのものが周囲のスイッチまで入れる武器になる。",
-   shine:"停滞している時、誰も一歩目を出せない時ほど本領発揮。試しながら答えを作る方が速い。",
-   shadow:"速さが武器なぶん、確認不足と抱え込みには注意。全部自分で走ったら、後ろ誰もおらん時あるで。"
- },
- "♠":{
-   core:"表面の言葉より、その奥の構造や違和感を読む札。見落とされている本質を拾うのが武器。",
-   shine:"分析、判断、改善、相談など『何がほんまの問題？』を見つける場面で強い。",
-   shadow:"見えすぎると考えすぎにもなる。全部理解してから動こうとすると、答えだけ立派で本人止まってるで。"
+function showError(msg){const e=document.getElementById("error");e.innerHTML=msg;e.style.display="block"}
+function clearError(){document.getElementById("error").style.display="none"}
+function calculateChart(){
+ clearError();
+ if(typeof Astronomy==="undefined"){showError("天体計算エンジンを読み込めませんでした。通信環境を確認して、もう一度開いてな。");return null}
+ const ds=document.getElementById("birthdate").value, ts=document.getElementById("birthtime").value;
+ if(!ds){showError("生年月日を入れてな📅");return null}
+ let exact=!!ts, date, raw, uncertain=[];
+ if(exact){
+   date=jstDate(ds,ts); raw=calcSix(date);
+ }else{
+   const a=calcSix(jstDate(ds,"00:00")), b=calcSix(jstDate(ds,"23:59"));
+   raw=calcSix(jstDate(ds,"12:00")); date=jstDate(ds,"12:00");
+   for(const k of Object.keys(raw)) if(signOf(a[k].lon)!==signOf(b[k].lon)) uncertain.push(`${glyph[k]} ${k==="moon"?"月":k==="sun"?"太陽":k==="mercury"?"水星":k==="venus"?"金星":k==="mars"?"火星":"木星"}：${signOf(a[k].lon)} または ${signOf(b[k].lon)}`);
+   if(uncertain.length){
+     showError("この日は出生時刻によって星座が変わる天体があります。ここは勝手に決めへんで⚠️<br><br>"+uncertain.join("<br>")+"<br><br>正確な診断には出生時刻を入れてください。");
+     return null;
+   }
  }
-};
-const jokerExtra={
- RJ:{core:"型から外れた時に急に強くなる特殊札。正解を守るより、自分のルールを作った方が能力が出る。",
-     shine:"前例がない、新しい、誰もやってない。そんな場面ほど出番。『普通はこう』が効かない時の突破札。",
-     shadow:"変わってること自体が目的になったらただの迷子。壊した後に何を作るかまでがJOKERの仕事や。"},
- BJ:{core:"崩れた状況を材料に変える特殊札。予定変更や失敗から、別ルートを即席で作れるしぶとさが武器。",
-     shine:"ピンチ、締切直前、想定外。普通なら止まる場面で頭と行動が急に噛み合う。",
-     shadow:"土壇場で強いからって毎回土壇場を作る必要はない。平常運転も覚えたらもっと怖いで。"}
-};
-function extraFor(c){
-  return (c.id==="RJ"||c.id==="BJ") ? jokerExtra[c.id] : powerExtra[c.suit];
+ const v={};for(const k of Object.keys(raw))v[k]=signOf(raw[k].lon);
+ const citySel=document.getElementById("city");
+ const opt=citySel.options[citySel.selectedIndex];
+ v.mc="";
+ if(exact && opt && opt.value && opt.dataset.lat && opt.dataset.lng){
+   const lat=Number(opt.dataset.lat), lng=Number(opt.dataset.lng);
+   if(Number.isFinite(lat)&&Number.isFinite(lng)){
+     const mlon=calcMC(date,lat,lng);v.mc=signOf(mlon);raw.mc={lon:mlon};
+   }
+ }
+ return {v,raw,date,exact};
 }
 
-function buildCombo(sel){
-  const powers=sel.map(c=>{
-    if(c.id==="RJ") return "規格外";
-    if(c.id==="BJ") return "逆転";
-    return c.suit;
-  });
-  const hasRJ=sel.some(c=>c.id==="RJ"), hasBJ=sel.some(c=>c.id==="BJ");
-  const labels={"♥":"人を惹きつける","♦":"価値へ変える","♣":"現実を動かす","♠":"本質を見抜く","規格外":"常識を壊す","逆転":"崩れてからひっくり返す"};
-  const a=labels[powers[0]], b=labels[powers[1]], c=labels[powers[2]];
-  let tag="", body="", punch="";
-  if(hasRJ && hasBJ){
-    tag="分類不能型｜人生そのものがワイルドカード";
-    body=`あんたの土台には「${a}力」がある。ところが眠らせている札と最後の切り札にJOKER級の揺さぶりが入る組み合わせ。決められた正解に合わせるより、状況ごと作り替えた時に強さが出る。`;
-    punch="悪いうめこ総評：普通の攻略本、たぶん途中で捨てるタイプや。";
-  }else if(hasRJ || hasBJ){
-    tag="JOKER混入型｜予定通りでは終わらん";
-    body=`最初の武器は「${a}力」。そこへ「${b}力」をどう扱うかが途中の課題になり、最後は「${c}力」で勝負する流れ。JOKERが混じるぶん、人生の節目では予定変更や独自路線が大きな転機になりやすい手札や。`;
-    punch="悪いうめこ総評：予定表は持っとけ。ただし予定表どおりになるとは思うな。";
-  }else{
-    const same=new Set(powers).size;
-    if(same===1){
-      tag=`一点突破型｜${labels[powers[0]]}力が主役`;
-      body=`3枚とも同じ系統。これは「${a}力」を、生まれつきの武器・眠らせている課題・最後の切り札まで一貫して使う手札。得意がハッキリしているぶん、使いすぎた時のクセにも気づけたらかなり強い。`;
-      punch="悪いうめこ総評：得意なんは分かった。得意一本で全部殴ろうとすな。";
-    }else if(same===2){
-      tag="二刀流型｜得意が濃い";
-      body=`あんたは「${a}力」を土台に持ち、「${b}力」をまだ十分使い切れていない。そして勝負どころでは「${c}力」が前に出る。似た力が2枚あるぶん得意分野は濃いけど、残り1枚を使えるようになると手札の幅が一気に広がる。`;
-      punch="悪いうめこ総評：同じ武器2本持って安心すな。もう1本も抜け。";
-    }else{
-      tag="三刀流型｜役割の違う3枚持ち";
-      body=`生まれつきは「${a}力」。でも今眠らせているのは「${b}力」。そして、ここぞという時に効くのが「${c}力」。3枚の役割が全部違うから、ひとつの得意だけで押すより「人・価値・行動・判断」を場面ごとに切り替えた時に強い手札や。`;
-      punch="悪いうめこ総評：札は揃ってる。問題は、出す順番や。";
-    }
-  }
-  return {tag,body,punch};
-}
-function showResults(){
-  $("#game").classList.add("hidden"); $("#results").classList.remove("hidden");
-  const slots=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
-  $("#hand").innerHTML=selected.map((c,i)=>`
-    <article class="result">
-      <div class="slot">${i+1}｜${slots[i]}</div>
-      ${face(c)}
-      <div class="power">${c.id==="RJ"||c.id==="BJ"?c.power:`${c.power} × ${c.action}`}</div>
-      <h3>${c.title}</h3>
-      <p class="reading">${c.reading}</p>
-      <div class="use"><b>この札の使いどころ</b><br>${c.use}</div>
-      <div class="deepread">
-        <div class="deepbox"><b>この手札の正体</b><br>${extraFor(c).core}</div>
-        <div class="deepbox"><b>うまく切れたら</b><br>${extraFor(c).shine}</div>
-        <div class="deepbox warn"><b>腐らせると</b><br>${extraFor(c).shadow}</div>
-      </div>
-      <div class="bad"><b>😈 悪いうめこの余計な一言</b><br>${c.bad}</div>
-    </article>`).join("");
-  $("#saveCard").innerHTML=`<div class="save-title">人生の手札診断</div>
-    <div class="save-sub">YOUR HAND｜ほな、いつ切るん？</div>
-    <div class="save-grid">${selected.map((d,i)=>{
-      const code=(d.id==="RJ"||d.id==="BJ")?d.name:`${d.rank}${d.suit}`;
-      const red=(d.suit==="♥"||d.suit==="♦"||d.id==="RJ")?" red":"";
-      return `<div class="save-mini"><div class="slot">${i+1}｜${slots[i]}</div>
-      <div class="cardcode${red}">${code}</div><h4>${d.title}</h4>
-      <p>${d.reading}</p><p class="devil">😈 ${d.bad}</p></div>`}).join("")}</div>`; 
-  const combo=buildCombo(selected);
-  $("#comboReading").innerHTML=`<h3>${displayName()}、3枚合わせたら何者？</h3>
-    <div class="combo-tag">${combo.tag}</div>
-    <p>${combo.body}</p>
-    <div class="combo-punch">😈 ${combo.punch}</div>`;
-  const jokers=selected.filter(c=>c.id==="RJ"||c.id==="BJ");
-  let text=`<div class="final">${displayName()}、ええ手札持ってるやん。<br><span style="color:#f3ca70">ほな、いつ切るん？</span></div>`;
-  if(jokers.length===1){
-    const pos=selected.indexOf(jokers[0]);
-    const msg=[
-      "そもそも規格外。最初から人と同じ型に入れんでよろしい。",
-      "自分を普通の枠に収めようとして、その札を腐らせてる可能性あり。",
-      "最後は予定通りに勝とうとせんでええ。ひっくり返すのが切り札や。"
-    ][pos];
-    text=`<div class="error">SYSTEM ERROR<br>この人、分類できません。</div><p class="final">${msg}<br>悪いうめこ「知らん。好きにせぇ。」</p>`;
-  }else if(jokers.length===2){
-    text=`<div class="error">判 定 不 能</div><p class="final">JOKER 2枚引き。<br><b>うめこにも手ぇ負えません。</b></p>`;
-  }
-  $("#summary").innerHTML=text+`<div class="duo"><img src="${IMG.normal}" alt="うめこ"><img src="${IMG.bad}" alt="悪いうめこ"></div>
-    <div style="margin:14px auto 0;padding-top:14px;border-top:1px solid #4f3c2b;color:#bdb0a0;line-height:1.7;font-size:.82rem">
-      ※所詮トランプです。<br>人生の重要事項は、自分で決めてください。
-      <div style="margin-top:8px;color:#ffabb5;font-weight:800">😈 悪いうめこ「トランプに人生決めてもろたら困るわ。」</div>
-    </div>`;
-  window.scrollTo({top:$("#results").offsetTop-10,behavior:"smooth"});
-}
-
-let shuffleTimer=null;
-$("#shuffleBtn").onclick=()=>{
-  const z=$("#shuffler");
-  z.classList.add("loop");
-  $("#shuffleBtn").classList.add("hidden");
-  $("#stopShuffle").classList.remove("hidden");
-  $("#shuffleMsg").textContent="まだまだ混ぜる？ 好きなとこで止めてな。";
-  shuffled=shuffle(cards);
-  shuffleTimer=setInterval(()=>{shuffled=shuffle(cards)},420);
+const richSign={
+"牡羊座":{strength:"先に動いて空気を変える瞬発力",caution:"勢いだけで説明や仕上げを置いていく",action:"今日ひとつ、考え中のものを表に出す"},
+"牡牛座":{strength:"価値をじっくり育て、品質で信用を積む力",caution:"納得するまで動かず旬を逃す",action:"いちばん自信のあるものを一つ磨く"},
+"双子座":{strength:"情報を集め、軽やかな言葉で人につなぐ力",caution:"面白そうな方へ飛びすぎて看板が散らかる",action:"今日伝えたいことを一文にする"},
+"蟹座":{strength:"人の気持ちを拾い、戻ってきたくなる居場所を作る力",caution:"世話を焼きすぎて自分が店員兼お客さん兼警備員になる",action:"大事にしたいお客さんを一人思い浮かべる"},
+"獅子座":{strength:"自分らしさを堂々と見せ、場を明るくする表現力",caution:"遠慮して主役を降りると魅力まで消える",action:"今日いちばん見てほしいものを一番前へ出す"},
+"乙女座":{strength:"細部を整え、役に立つ形へ仕上げる改善力",caution:"直す場所を探し続けて永遠に開店できへん🛠️",action:"導線を一か所だけ改善して終わる"},
+"天秤座":{strength:"人と価値を美しくつなぎ、選びやすく見せる調整力",caution:"全員に好かれようとして自分の看板が薄くなる",action:"『これがうちの看板』を一つ決める"},
+"蠍座":{strength:"ひとつを深く掘り、濃い信頼へ変える集中力",caution:"濃さを隠して無難な薄味になる",action:"誰より深く語れるテーマを一つ前へ出す"},
+"射手座":{strength:"学びと経験を外へ運び、世界を広げる展開力",caution:"次の面白いことへ走って昨日の店を忘れる🧳",action:"次に試したいことを一つ予定へ入れる"},
+"山羊座":{strength:"積み上げを仕組みと実績に変える継続力",caution:"実績が揃うまで名乗らず準備室に住み着く📚",action:"続けたい仕事の次の三回を決める"},
+"水瓶座":{strength:"当たり前を疑い、自分式の仕組みを作る独創力",caution:"違うこと自体が目的になって客を置いていく",action:"普通こうする、を一つだけ外して試す"},
+"魚座":{strength:"言葉にならない感覚を世界観へ変える共感力",caution:"雰囲気で全部伝わると思って申込方法まで霞ませる☁️",action:"頭の中のイメージを一つ形にする"}
 };
-$("#stopShuffle").onclick=()=>{
-  clearInterval(shuffleTimer); shuffleTimer=null;
-  const z=$("#shuffler"); z.classList.remove("loop");
-  $("#stopShuffle").classList.add("hidden");
-  $("#shuffleMsg").textContent="そこやな。手札、決まりました。";
-  burstSparkles();
-  setTimeout(()=>{
-    z.classList.add("hidden"); $("#pickArea").classList.remove("hidden");
-    $("#pickArea").scrollIntoView({behavior:"smooth",block:"start"});
-  },650);
-};
-
-function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){
-  let line="", lines=[];
-  for(const ch of text){
-    const test=line+ch;
-    if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=ch}else line=test;
-  }
-  if(line) lines.push(line);
-  lines=lines.slice(0,maxLines);
-  lines.forEach((ln,i)=>ctx.fillText(ln,x,y+i*lineHeight));
-  return y+lines.length*lineHeight;
+const deptVoice={
+sun:{
+ role:"ここは『何を看板にして商売するか』を決める部署。商品名より先に、あんたが何を大事にして仕事する人なんかを見る。",
+ strength:s=>`看板にすると強いのは、${core[s].v}こと。${richSign[s].strength}が、そのまま店の芯になる。`,
+ caution:s=>`看板を作る時の注意は「${richSign[s].caution}」こと。売れる形に寄せすぎて、自分の芯まで消さんこと。`,
+ action:s=>richSign[s].action
+},
+moon:{
+ role:"ここは『なんでお客さんがまた来たくなるんか』を見る部署。技術や値段だけやなく、店に流れる安心感を担当する。",
+ strength:s=>`リピートの鍵は、${core[s].v}空気。${richSign[s].strength}が『ここやったら大丈夫』につながりやすい。`,
+ caution:s=>`居心地を作ろうとして「${richSign[s].caution}」状態にならんように。お客さんを大事にするのと、全部背負うのは別やで。`,
+ action:s=>`お客さんが帰る時に、どんな気分になってほしいか一言で決める。`
+},
+mercury:{
+ role:"ここは『どう言えば伝わるか』専門。投稿文、説明、接客トーク、メニュー名まで、商売の言葉を担当する。",
+ strength:s=>`言葉の武器は「${core[s].tone}」。${richSign[s].strength}を文章や会話に乗せると、あんたらしい説明になる。`,
+ caution:s=>`伝えようとして「${richSign[s].caution}」になったら一回編集。言いたいことより、相手が受け取れる形にする。`,
+ action:s=>`今日いちばん売りたいものを、${core[s].tone}説明で三行にする。`
+},
+venus:{
+ role:"ここは店構え担当。色、写真、雰囲気、パッケージ、見せ方など『なんか好き』を作る部署。",
+ strength:s=>`魅せ方の軸は「${core[s].look}」。${richSign[s].strength}を見た目に翻訳すると、世界観に筋が通る。`,
+ caution:s=>`映えを追いすぎて「${richSign[s].caution}」にならんこと。飾るためやなく、魅力を見つけてもらうための店構えや。`,
+ action:s=>`プロフィール・メニュー・写真のうち一か所だけ、${core[s].look}方向へ整える。`
+},
+mars:{
+ role:"ここは営業部。考えたことを現実でどう動かすか、募集・告知・行動のアクセルを担当する。",
+ strength:s=>`動く時は「${core[s].act}」が強い。${richSign[s].strength}を営業の動きに使うと、無理な根性論より続きやすい。`,
+ caution:s=>`アクセル踏みすぎ・踏まなさすぎのサインは「${richSign[s].caution}」。営業部だけ暴走させんといて🏃‍♀️💨`,
+ action:s=>richSign[s].action
+},
+jupiter:{
+ role:"ここは事業拡張部。何を育てると商売の世界が広がるか、次の一手と伸びしろを担当する。",
+ strength:s=>`広げるなら「${core[s].grow}」方向。${richSign[s].strength}を大きく使うほど、次の展開を作りやすい。`,
+ caution:s=>`拡張工事で「${richSign[s].caution}」になったら増築ストップ🛑 何を育ててる会社か見失わんこと。`,
+ action:s=>`今ある仕事の中から『半年育てたいもの』を一つだけ選ぶ。`
+},
+mc:{
+ role:"ここは世間の看板部。内心どう思ってるかより、社会に向けて『何屋として立つか』を担当する。",
+ strength:s=>`外へ掲げる看板は「${core[s].social}」。${richSign[s].strength}を社会向けの役割として見せると分かりやすい。`,
+ caution:s=>`世間受けだけ考えて「${richSign[s].caution}」にならんこと。MCは仮面やなく、社会で使う看板や。`,
+ action:s=>`初対面の人に『何してる人？』と聞かれた時の答えを一文で作る。`
 }
-async function saveResultImage(){
-  if(selected.length!==3) return;
-
-  const W=1080, H=2600;
-  const c=document.createElement("canvas");
-  c.width=W; c.height=H;
-  const ctx=c.getContext("2d");
-
-  const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,"#2b0812"); bg.addColorStop(.35,"#120b10"); bg.addColorStop(1,"#050405");
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-
-  // decorative glow
-  const glow=ctx.createRadialGradient(540,120,10,540,120,520);
-  glow.addColorStop(0,"rgba(190,35,63,.38)"); glow.addColorStop(1,"rgba(190,35,63,0)");
-  ctx.fillStyle=glow; ctx.fillRect(0,0,W,620);
-
-  ctx.strokeStyle="#d4a64d"; ctx.lineWidth=5; ctx.strokeRect(28,28,1024,2544);
-  ctx.strokeStyle="#6e512a"; ctx.lineWidth=2; ctx.strokeRect(42,42,996,2516);
-
-  ctx.textAlign="center";
-  ctx.fillStyle="#e8bd61"; ctx.font="700 27px serif"; ctx.fillText("YOUR HAND",540,86);
-  ctx.fillStyle="#fff0c0"; ctx.font="900 61px serif"; ctx.fillText("人生の手札診断",540,154);
-  ctx.fillStyle="#e8bd61"; ctx.font="700 24px sans-serif";
-  if(displayName()!=="あんた") ctx.fillText(displayName()+" の手札",540,188);
-  ctx.fillStyle="#c9bba7"; ctx.font="25px sans-serif";
-  ctx.fillText("配られたカードは変えられへん。でも、切り方は自分次第。",540,220);
-
-  const labels=["生まれつき持ってる札","なぜか腐らせてる札","人生の切り札"];
-  const xs=[190,540,890];
-
-  function roundRect(x,y,w,h,r,fill,stroke){
-    ctx.beginPath(); ctx.roundRect(x,y,w,h,r);
-    if(fill) ctx.fill(); if(stroke) ctx.stroke();
-  }
-  function drawWrapped(text,x,y,maxWidth,lineHeight,maxLines,font,fill){
-    ctx.font=font; ctx.fillStyle=fill; ctx.textAlign="center";
-    let line="", lines=[];
-    for(const ch of text){
-      const test=line+ch;
-      if(ctx.measureText(test).width>maxWidth && line){lines.push(line); line=ch}else line=test;
-    }
-    if(line) lines.push(line);
-    lines=lines.slice(0,maxLines);
-    lines.forEach((ln,i)=>ctx.fillText(ln,x,y+i*lineHeight));
-    return y+lines.length*lineHeight;
-  }
-
-  selected.forEach((d,i)=>{
-    const x=xs[i], left=x-155, top=250;
-    ctx.fillStyle="#151015"; ctx.strokeStyle="#8f6a35"; ctx.lineWidth=3;
-    roundRect(left,top,310,1405,22,true,true);
-
-    ctx.fillStyle="#d7b96d"; ctx.font="700 20px sans-serif"; ctx.textAlign="center";
-    ctx.fillText(labels[i],x,292);
-
-    const isJ=d.id==="RJ"||d.id==="BJ";
-    const red=d.suit==="♥"||d.suit==="♦"||d.id==="RJ";
-    ctx.fillStyle=red?"#ff5d70":"#f3e7d2";
-    ctx.font=isJ?"900 35px Georgia":"900 76px Georgia";
-    ctx.fillText(isJ?d.name:`${d.rank} ${d.suit}`,x,395);
-
-    let y=447;
-    const ex=extraFor(d);
-
-    y = drawWrapped(
-      isJ?d.power:`${d.power} × ${d.action}`,
-      x,y,270,28,2,"700 19px sans-serif","#d5bc7e"
-    ) + 28;
-
-    y = drawWrapped(d.title,x,y,270,38,2,"900 29px sans-serif","#fff0bf") + 45;
-    y = drawWrapped(d.reading,x,y,266,34,6,"22px sans-serif","#eee2d4") + 58;
-
-    ctx.fillStyle="#e5c678"; ctx.font="700 19px sans-serif";
-    ctx.fillText("この手札の正体",x,y);
-    y += 37;
-    y = drawWrapped(ex.core,x,y,265,29,5,"19px sans-serif","#eee2d4") + 46;
-
-    ctx.fillStyle="#e5c678"; ctx.font="700 19px sans-serif";
-    ctx.fillText("うまく切れたら",x,y);
-    y += 37;
-    y = drawWrapped(ex.shine,x,y,265,29,5,"19px sans-serif","#eee2d4") + 46;
-
-    ctx.fillStyle="#ff9fac"; ctx.font="700 19px sans-serif";
-    ctx.fillText("腐らせると",x,y);
-    y += 37;
-    drawWrapped(ex.shadow,x,y,265,29,5,"19px sans-serif","#f3dedf");
-
-    // Devil comment gets its own reserved footer area.
-    // This prevents long shadow copy from ever colliding with it.
-    const devilY=1460;
-    ctx.strokeStyle="#3e2b31"; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(left+28,devilY-38); ctx.lineTo(left+282,devilY-38); ctx.stroke();
-    ctx.fillStyle="#ffabb5"; ctx.font="700 20px sans-serif";
-    ctx.fillText("😈 悪いうめこ",x,devilY);
-    drawWrapped(d.bad,x,devilY+38,265,28,4,"20px sans-serif","#f3dedf");
-  });
-  const combo=buildCombo(selected);
-  ctx.fillStyle="#1b1015"; ctx.strokeStyle="#a77d38"; ctx.lineWidth=3;
-  roundRect(245,1705,590,430,20,true,true);
-  ctx.fillStyle="#fff0bd"; ctx.font="900 31px sans-serif"; ctx.textAlign="center";
-  ctx.fillText(displayName()+"、3枚合わせたら何者？",540,1760);
-  ctx.fillStyle="#d8b85e"; ctx.font="800 23px sans-serif";
-  drawWrapped(combo.tag,540,1805,520,31,2,"800 23px sans-serif","#d8b85e");
-  drawWrapped(combo.body,540,1885,520,30,6,"20px sans-serif","#eee1d1");
-  drawWrapped("😈 "+combo.punch,540,2065,520,29,3,"700 19px sans-serif","#ffb7c0");
-
-  // Mascots in saved image
-  async function loadPic(src){
-    return new Promise((resolve,reject)=>{const im=new Image(); im.onload=()=>resolve(im); im.onerror=reject; im.src=src;});
-  }
-  try{
-    const [u,bad]=await Promise.all([loadPic(IMG.normal),loadPic(IMG.bad)]);
-    ctx.drawImage(u,55,1790,175,175);
-    ctx.drawImage(bad,850,1790,175,175);
-  }catch(e){}
-
-  ctx.fillStyle="#fff0bf"; ctx.font="900 34px sans-serif"; ctx.textAlign="center";
-  ctx.fillText(displayName()+"、ええ手札持ってるやん。",540,2280);
-  ctx.fillStyle="#e8bd61"; ctx.font="900 44px sans-serif";
-  ctx.fillText("ほな、いつ切るん？",540,2340);
-  ctx.fillStyle="#8e8275"; ctx.font="18px sans-serif";
-  ctx.fillStyle="#b6a895"; ctx.font="18px sans-serif";
-  ctx.fillText("所詮トランプ。されど、妙に刺さる。",540,2460);
-  ctx.fillStyle="#776f68"; ctx.font="15px sans-serif";
-  ctx.fillText("※人生の重要事項は、自分で決めてください。",540,2495);
-
-  // iPhone: show the actual PNG and save by long press.
-  const png=c.toDataURL("image/png");
-  const overlay=document.createElement("div");
-  overlay.className="save-preview";
-  overlay.innerHTML=`
-    <div class="guide">うめこ＆悪いうめこ入りで、できたで🤣<br>
-    ↓ この画像を <b>長押し</b> →「写真に保存」してな。<br>
-    <span style="font-size:.82rem;color:#cbbba5">Safariでメニューが出にくい時は画像を一度タップしてから長押し。</span></div>
-    <img src="${png}" alt="人生の手札診断 保存用画像">
-    <button class="btn secondary closePreview">診断に戻る</button>`;
-  document.body.appendChild(overlay);
-  overlay.querySelector(".closePreview").onclick=()=>overlay.remove();
-}
-
-$("#start").onclick=()=>{
-  const raw=$("#userName").value.trim();
-  playerName=raw || "あんた";
-  $("#resultTitle").textContent=playerName==="あんた" ? "あんたの人生の手札" : `${playerName}の人生の手札`;
-  $("#intro").classList.add("hidden");deal();window.scrollTo({top:0,behavior:"smooth"});
 };
-$("#saveResult").onclick=saveResultImage;
-$("#again").onclick=()=>{deal();window.scrollTo({top:0,behavior:"smooth"})};
-</script>
-</body>
-</html>
+function richDepartmentHTML(d,s){
+ const v=deptVoice[d.id];
+ return `<img src="./${d.img}" alt=""><div>
+ <h3>${d.label}</h3>
+ <p><b>【うちの部署の役目】</b><br>${v.role}</p>
+ <p><b>【売る時の強み】</b><br>${v.strength(s)}</p>
+ <p><b>【部長から注意】</b><br>${v.caution(s)}</p>
+ <p><b>【本日の部長命令】</b><br>${v.action(s)}</p>
+ </div>`;
+}
+function departmentText(d,s){
+ const c=core[s], prefixes={sun:"あんたが前に出す核は",moon:"お客さんが『また来よ』と思う鍵は",mercury:"伝える時の武器は",venus:"世界観づくりの鍵は",mars:"動く時の勝ち筋は",jupiter:"事業を育てるなら",mc:"世間から見えやすい看板は"};
+ return `${prefixes[d.id]}「${c[d.field]}」。${s}らしい「${c.k}」を、無理に薄めんでええ。`;
+}
+function buildType(v){return `「${core[v.sun].k}を看板に、${core[v.mercury].k}で伝えて、${core[v.mars].k}で動く商店主」`}
+function buildMeeting(v){
+ const L=[`看板商品部「${core[v.sun].v}。これを前に出そ。」`,`また来たなる部「うちは『${core[v.moon].v}』が安心材料やで。」`,`売り文句部「説明は『${core[v.mercury].tone}』でいこ。」`,`店構え部「見た目は『${core[v.venus].look}』。そこ雑にせんといて。」`,`営業部「${core[v.mars].act}。会議だけで一日終わらすな🤣」`,`事業拡張部「次に育てるなら『${core[v.jupiter].grow}』や。」`];
+ if(v.mc)L.push(`世間の看板部「外からは『${core[v.mc].social}』として見せてこ。」`);return L.join("<br>");
+}
+const dontMap={"牡羊座":"完璧になるまで隠し続けること。","牡牛座":"安さだけで勝負して、自分の品質まで値切ること。","双子座":"ひとつの説明を完璧にするまで発信を止めること。","蟹座":"全員の面倒を抱えて、自分の店まで閉めること。","獅子座":"目立たんように全部を無難にすること。","乙女座":"直す場所を探し続けて、完成を永遠に延期すること。","天秤座":"全員に合わせすぎて、自分の看板を消すこと。","蠍座":"濃さを怖がって、誰にでも当たる薄味にすること。","射手座":"自由を求めすぎて、昨日始めた店を今日たたむこと🤣","山羊座":"実績が揃うまで『まだ名乗れません』を続けること。","水瓶座":"違うこと自体を目的にして、お客さんを置いていくこと。","魚座":"雰囲気だけで全部伝わると思って、申込方法まで溶かすこと。"};
+const orderMap={"牡羊座":"今日ひとつ、60点のまま表に出せ。","牡牛座":"いちばん自信ある商品を1個選んで、価値を3行で書け。","双子座":"今日知ったことを、短文ひとつで発信せぇ。","蟹座":"『誰に戻ってきてほしい店か』を1人だけ思い浮かべて書け。","獅子座":"いちばん見てほしいものを、遠慮せず主役に置け。","乙女座":"申込までの導線を1か所だけ直せ。全部直すな。","天秤座":"プロフィールかメニューの見た目を1か所整えろ。","蠍座":"『ここだけは誰より深く語れる』テーマを1個決めろ。","射手座":"今いちばん学びたい・試したいことを1個、予定に入れろ。","山羊座":"続けたい仕事を1個選んで、次の3回分だけ予定を決めろ。","水瓶座":"『普通こうする』を1個だけ疑って、自分式を試せ。","魚座":"頭の中のイメージを、写真・言葉・絵のどれか1つにせぇ。"};
+
+function fillLongReport(v,name){
+ const A=core[v.sun],B=core[v.moon],C=core[v.mercury],D=core[v.venus],E=core[v.mars],F=core[v.jupiter];
+ const put=(id,t)=>document.getElementById(id).textContent=t;
+ put("overall",`${name}株式会社は、「${A.k}」を商売の芯に、「${C.k}」で伝え、「${E.k}」で現実を動かす会社。全部ひとりで同じテンションで頑張ろ思たら、そら社長倒れる🤣 看板・接客・言葉・見せ方・営業・拡張、部署ごとに働かせた方があんたの商売は回りやすい。`);
+ put("reportCore",`前に出したい価値は「${A.v}」。メニュー増やしたら売れる、ちゃうで🛍️ 「この人、何を大事にして仕事してんの？」が伝わった時に看板は強なる。${richSign[v.sun].strength}を商品やサービスの中心へ置くのが土台。`);
+ put("reportCustomer",`お客さんが戻ってくる鍵は「${B.v}」と感じられること。技術と値段だけ見てへんで。しゃべった時の感じ、帰る時の気分、「また来よかな」まで全部商品や。${richSign[v.moon].strength}を接客に使いつつ、${richSign[v.moon].caution}状態にならない線引きも必要。`);
+ put("reportMessage",`伝える時は「${C.tone}」が基本。説明ぎゅうぎゅうに詰めたら親切、とは限らん🤣 「この人の話、分かるわ」が勝ち。投稿・プロフィール・メニュー説明・対面トークを同じ言葉遣いでつなぐと、商売の印象がまとまりやすい。`);
+ put("reportBrand",`見せ方は「${D.look}」が軸。写真だけオシャレにしても店は完成せん🎨 文字も余白もパッケージも接客も、同じ空気になったら「あ、あんたの店や」になる。${richSign[v.venus].strength}が視覚に出るほど「あの人っぽい」が育つ。`);
+ put("reportAction",`営業では「${E.act}」が自然に動きやすい型。嫌いな営業を根性で続けて毎回しんどなるん、もうええ✋ 自分が動けるテンポに募集も告知も合わせたらええ。注意したいのは${richSign[v.mars].caution}こと。`);
+ put("reportGrowth",`育てる方向は「${F.grow}」。何でもかんでも増築したら、最終的に何屋か分からん建物できるで🏗️ 反応ある・続けられる・もっと育てたい。このへんから増やそ。「何屋として広げるか」を確認してから増築する。`);
+ put("reportPublic",v.mc?`社会へ掲げる看板は「${core[v.mc].social}」。初対面で「で、何してる人なん？」になったら看板迷子🪧 一言で何を頼める人か伝わるようにしとこ。${richSign[v.mc].strength}を社会向けの役割として見せると伝わりやすい。`:`出生時刻・出生地が揃っていないため、ここは推測していません。分からんもんを、たぶんコレやろで埋めるんはナシ⚠️ 今回は分かる6部署だけで、ちゃんと会議しとく。`);
+ put("reportRisk",`注意したいのは「${richSign[v.sun].caution}」ことと、営業面で「${richSign[v.mars].caution}」状態になること。あんたに魅力がないんちゃう。持ち味を働かせすぎるか、逆に休ませすぎた時に「なんで回らんねん」が起きやすい。`);
+ put("reportPolicy",`まず「${A.v}」を看板として明確にし、発信は「${C.tone}」、行動は「${E.act}」で統一する。そのうえで「${F.grow}」を半年単位で育てる。新しいもん足す前に「それ、うちの会社に要るん？」って一回会議して📝 足すんはその後や。`);
+ put("finalDecision",`${orderMap[v.mars]}　全部いっぺんに直そうとすな☝️ 今日ひとつ決裁。ほんで商売を1ミリ動かす。それで優勝。`);
+}
+async function buildLicensePreview(v,name,type){
+ const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+ x.fillStyle="#fff8ef";x.fillRect(0,0,W,H);x.textAlign="center";x.fillStyle="#332923";x.font="900 54px sans-serif";x.fillText("商売・営業許可証",W/2,85);
+ try{const im=new Image();im.src="./LICENSE.PNG";await im.decode();x.drawImage(im,330,125,420,370)}catch(e){}
+ x.font="900 40px sans-serif";x.fillText(name+"株式会社",W/2,555);x.font="800 29px sans-serif";wrapCanvas(x,type,100,620,880,42);
+ x.textAlign="left";x.font="700 26px sans-serif";let y=740;
+ [["看板","認定"],["接客","認定"],["伝え方","認定"],["店構え","認定"],["営業","認定"],["拡張","認定"]].forEach(r=>{x.fillStyle="#9b6b38";x.fillText(r[0],150,y);x.fillStyle="#332923";x.fillText(r[1],430,y);y+=52});
+ x.textAlign="center";x.font="900 28px sans-serif";x.fillText("本日の営業命令",W/2,y+30);x.font="700 24px sans-serif";wrapCanvas(x,orderMap[v.mars],100,y+75,880,38);
+ x.font="500 17px sans-serif";x.fillStyle="#8b7a6e";x.fillText("星から読む 自分株式会社の商売会議",W/2,1310);
+ document.getElementById("licensePreview").src=c.toDataURL("image/png");
+}
+function diagnose(){
+ const chart=calculateChart();if(!chart)return;const {v,raw,exact}=chart,name=document.getElementById("name").value.trim()||"社長";
+ document.getElementById("mode").textContent=v.mc?"7部署・MC込み":"6部署・MCなし";
+ document.getElementById("type").textContent=name+"株式会社："+buildType(v);
+ document.getElementById("summary").textContent=`看板は${core[v.sun].k}、伝え方は${core[v.mercury].k}、動き方は${core[v.mars].k}。星の部署ごとに役割を分けて会議したで。`;
+ const wrap=document.getElementById("departments");wrap.innerHTML="";
+ depts.forEach(d=>{if(!v[d.id])return;const el=document.createElement("div");el.className="dept";el.innerHTML=richDepartmentHTML(d,v[d.id]);wrap.appendChild(el)});
+ document.getElementById("meeting").innerHTML=buildMeeting(v);document.getElementById("dont").textContent=dontMap[v.sun];document.getElementById("order").textContent=orderMap[v.mars];
+ document.getElementById("umeko").textContent=v.mc?"会議7人おんのに社長あんた一人や。はよ決裁せぇ📌":"MCは推測してへん。分かる6部署だけで営業開始や🙆‍♀️";
+ fillLongReport(v,name);buildLicensePreview(v,name,buildType(v));
+ document.getElementById("formCard").style.display="none";document.getElementById("result").style.display="block";window.__last={v,name,type:buildType(v)};window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("diagnose").addEventListener("click",diagnose);
+document.getElementById("retry").addEventListener("click",()=>{document.getElementById("result").style.display="none";document.getElementById("formCard").style.display="block";window.scrollTo({top:0,behavior:"smooth"})});
+document.getElementById("printReport").addEventListener("click",()=>buildReportImage());
+async function buildReportImage(){
+ const q=window.__last;if(!q)return;
+ const {v,name}=q;
+ const W=1240,H=1754,P=78;
+ const make=()=>{const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");x.fillStyle="#fffaf4";x.fillRect(0,0,W,H);return [c,x]};
+ const wrap=(x,text,maxWidth,font)=>{x.font=font;let out=[],line="";for(const ch of [...text]){const t=line+ch;if(x.measureText(t).width>maxWidth&&line){out.push(line);line=ch}else line=t}if(line)out.push(line);return out};
+ const draw=(x,text,x0,y,maxWidth,font,lineH,color="#332923")=>{x.fillStyle=color;for(const l of wrap(x,text,maxWidth,font)){x.fillText(l,x0,y);y+=lineH}return y};
+ const header=(x,page,sub)=>{
+   x.fillStyle="#332923";x.font="900 27px sans-serif";x.fillText("自分株式会社・商売鑑定書",P,57);
+   x.textAlign="right";x.fillStyle="#9b5f2f";x.font="800 22px sans-serif";x.fillText(`${page}/3`,W-P,57);x.textAlign="left";
+   x.fillStyle="#d9c7b5";x.fillRect(P,80,W-P*2,3);
+   x.fillStyle="#9b5f2f";x.font="800 23px sans-serif";x.fillText(sub,P,120);
+ };
+ const box=(x,title,text,y,icon,opts={})=>{
+   const font=opts.font||"29px sans-serif", lh=opts.lh||45;
+   const lines=wrap(x,text,W-P*2-46,font);
+   const h=70+lines.length*lh+30;
+   x.fillStyle=opts.bg||"#fff";x.strokeStyle="#eadfd4";x.lineWidth=2;
+   roundRect(x,P,y,W-P*2,h,24);x.fill();x.stroke();
+   x.fillStyle="#9b5f2f";x.font="900 31px sans-serif";x.fillText(`${icon} ${title}`,P+24,y+45);
+   x.fillStyle="#332923";x.font=font;let ty=y+94;lines.forEach(l=>{x.fillText(l,P+24,ty);ty+=lh});
+   return y+h+22;
+ };
+ const overall=document.getElementById("overall").textContent, coreT=document.getElementById("reportCore").textContent;
+ const cust=document.getElementById("reportCustomer").textContent, msg=document.getElementById("reportMessage").textContent;
+ const brand=document.getElementById("reportBrand").textContent, act=document.getElementById("reportAction").textContent;
+ const growth=document.getElementById("reportGrowth").textContent, pub=document.getElementById("reportPublic").textContent;
+ const risk=document.getElementById("reportRisk").textContent, policy=document.getElementById("reportPolicy").textContent;
+ const decision=document.getElementById("finalDecision").textContent;
+
+ // PAGE 1
+ let [c1,x1]=make();header(x1,1,"まずここ読んで。あんたの会社、こんな会社。");
+ x1.fillStyle="#332923";x1.font="900 58px sans-serif";x1.fillText(name+"株式会社",P,215);
+ x1.fillStyle="#9b5f2f";x1.font="900 34px sans-serif";x1.fillText("商売の取扱説明書",P,270);
+ try{const im=new Image();im.src="./UMEKO_REPORT.PNG";await im.decode();x1.drawImage(im,805,145,330,365)}catch(e){}
+ let y1=345;
+ // Overall uses narrower box to coexist with character at top, then full-width sections.
+ x1.fillStyle="#fff4f7";x1.strokeStyle="#f1d9df";roundRect(x1,P,y1,690,360,24);x1.fill();x1.stroke();
+ x1.fillStyle="#9b5f2f";x1.font="900 32px sans-serif";x1.fillText("✨ 総合所見",P+25,y1+50);
+ let oy=y1+105;oy=draw(x1,overall,P+25,oy,640,"29px sans-serif",46);
+ y1=745;
+ y1=box(x1,"商売の核",coreT,y1,"🏪",{font:"29px sans-serif",lh:46,bg:"#fff"});
+ // Fill remaining bottom with decision block.
+ const dh=H-y1-70;
+ x1.fillStyle="#332923";roundRect(x1,P,y1,W-P*2,dh,24);x1.fill();
+ x1.fillStyle="#fff";x1.font="900 32px sans-serif";x1.fillText("📌 まず最初の決裁",P+26,y1+52);
+ draw(x1,decision,P+26,y1+110,W-P*2-52,"700 29px sans-serif",47,"#fff");
+
+ // PAGE 2
+ let [c2,x2]=make();header(x2,2,"お客さんに届くまで。接客・言葉・見せ方・営業。");
+ let y2=160;
+ y2=box(x2,"お客さんとの関係",cust,y2,"🤝",{font:"28px sans-serif",lh:44,bg:"#fffdf9"});
+ y2=box(x2,"伝え方・発信",msg,y2,"📣",{font:"28px sans-serif",lh:44,bg:"#fff"});
+ y2=box(x2,"世界観・見せ方",brand,y2,"🎨",{font:"28px sans-serif",lh:44,bg:"#fffdf9"});
+ y2=box(x2,"行動・営業",act,y2,"🔥",{font:"28px sans-serif",lh:44,bg:"#fff"});
+ // Footer character fills otherwise dead space.
+ try{const im=new Image();im.src="./UMEKO_REPORT.PNG";await im.decode();const sz=Math.min(230,Math.max(120,H-y2-55));x2.globalAlpha=.20;x2.drawImage(im,W-P-sz,H-sz-30,sz,sz);x2.globalAlpha=1}catch(e){}
+ x2.fillStyle="#8b7a6e";x2.font="700 22px sans-serif";x2.fillText("うまく売るより、あんたらしく伝わる形を作る。",P,H-45);
+
+ // PAGE 3
+ let [c3,x3]=make();header(x3,3,"ここから先。育てる・見せる・詰まりをほどく。");
+ let y3=160;
+ y3=box(x3,"育てる方向",growth,y3,"🌱",{font:"28px sans-serif",lh:44,bg:"#fffdf9"});
+ y3=box(x3,"社会に掲げる看板",pub,y3,"🏢",{font:"28px sans-serif",lh:44,bg:"#fff"});
+ y3=box(x3,"商売で詰まりやすいところ",risk,y3,"⚠️",{font:"28px sans-serif",lh:44,bg:"#fffdf9"});
+ y3=box(x3,"これからの商売方針",policy,y3,"🧭",{font:"28px sans-serif",lh:44,bg:"#fff"});
+ const remaining=H-y3-55;
+ if(remaining>170){
+   x3.fillStyle="#332923";roundRect(x3,P,y3,W-P*2,remaining,24);x3.fill();
+   x3.fillStyle="#fff";x3.font="900 31px sans-serif";x3.fillText("🐱 うめこ最終決裁",P+26,y3+50);
+   draw(x3,decision,P+26,y3+105,W-P*2-52,"700 28px sans-serif",45,"#fff");
+ }
+ [["reportPage1",c1],["reportPage2",c2],["reportPage3",c3]].forEach(([id,c])=>{const im=document.getElementById(id);im.src=c.toDataURL("image/png");im.style.display="block"});
+ document.getElementById("reportPage1").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function roundRect(ctx,x,y,w,h,r){
+ r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}
+function wrapCanvas(ctx,text,x,y,maxWidth,lineHeight){let line="";for(const ch of [...text]){const t=line+ch;if(ctx.measureText(t).width>maxWidth&&line){ctx.fillText(line,540,y);line=ch;y+=lineHeight}else line=t}if(line)ctx.fillText(line,540,y)}
+</script></body></html>
